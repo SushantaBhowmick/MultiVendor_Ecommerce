@@ -3,6 +3,8 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { RxAvatar } from "react-icons/rx";
 import styles from '../../style/styles'
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import { server } from "../../../server";
 
 const SignUp = () => {
 
@@ -12,14 +14,35 @@ const SignUp = () => {
   const [avatar, setAvatar] = useState(null);
   const [visible, setVisible] = useState(false);
 
-  const handleSubmit=(e)=>{
-    e.preventDefault();
-    console.log("fff")
-  }
-const handleFileInputChange=(e)=>{
+
+  const handleFileInputChange = (e) => {
     const file = e.target.files[0]
     setAvatar(file)
-}
+    // const reader = new FileReader();
+
+    // reader.onload = () => {
+    //   if (reader.readyState === 2) {
+    //     setAvatar(reader.result);
+    //   }
+    // };
+
+    // reader.readAsDataURL(e.target.files[0]);
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const config = {
+      headers: { "Content-Type": "multipart/form-data" }
+    }
+    const myForm = new FormData();
+    myForm.append("file", avatar);
+    myForm.append("name", name);
+    myForm.append("email", email);
+    myForm.append("password", password);
+
+    axios.post(`${server}/user/create-user`, myForm, config)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+  }
 
   return (
 
@@ -89,32 +112,35 @@ const handleFileInputChange=(e)=>{
               </div>
 
             </div>
-<div className="">
-    <label htmlFor="avatar"
-    className="block text-sm font-medium text-gray-700"
-    ></label>
-    <div className="mt-2 flex items-center">
-        <span className="inline-block h-8 rounded-full overflow-hidden">
-            {
-                avatar?
-                (<img src={avatar} alt="avatar" 
-                className="h-full w-full object-cover rounded-full"
-                />) :(<RxAvatar className="w-8 h-8"/>)
-            }
-        </span>
-        <label htmlFor="file-input"
-        className="ml-5 items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-        >
-            <span>Upload a file</span>
-            <input type="file" name="avatar" id="file-input"
-            accept=".jpg,.jpeg,.png"
-            onChange={handleFileInputChange}
-            className="sr-only"
-            />
-        </label>
-    </div>
+            <div className="">
+              <label htmlFor="avatar"
+                className="block text-sm font-medium text-gray-700"
+              ></label>
+              <div className="mt-2 flex items-center">
+                <span className="inline-block h-8 rounded-full overflow-hidden">
+                  {
+                    avatar ?
+                      (
+                      <img 
+                      src={avatar}
+                      alt="avatar"
+                        className="h-full w-full object-cover rounded-full"
+                      />) : (<RxAvatar className="w-8 h-8" />)
+                  }
+                </span>
+                <label htmlFor="file-input"
+                  className="ml-5 items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  <span>Upload a file</span>
+                  <input type="file" name="avatar" id="file-input"
+                    accept=".jpg,.jpeg,.png"
+                    onChange={handleFileInputChange}
+                    className="sr-only"
+                  />
+                </label>
+              </div>
 
-</div>
+            </div>
             <div>
               <button
                 type="submit"
@@ -123,12 +149,12 @@ const handleFileInputChange=(e)=>{
             </div>
             <div className={`${styles.noramlFlex} w-full`}>
               <h4>Already have a account?</h4>
-                <Link to={'/login'}
-                  className=" text-blue-600 hover:text-blue-500  pl-2"
-                >
-                  Sign In
-                </Link>
-              </div>
+              <Link to={'/login'}
+                className=" text-blue-600 hover:text-blue-500  pl-2"
+              >
+                Sign In
+              </Link>
+            </div>
           </form>
         </div>
       </div>

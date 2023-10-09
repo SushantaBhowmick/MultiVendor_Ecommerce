@@ -4,6 +4,7 @@ const ErrorHandler = require('../utils/ErrorHandler');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const sendMail = require('../utils/sendMail');
 
 exports.register = catchAsyncErrors(async(req,res,next)=>{
     const {name,email,password} = req.body;
@@ -39,12 +40,20 @@ exports.register = catchAsyncErrors(async(req,res,next)=>{
     const activationToken = createActivationToken(user);
     const activationUrl = `http://localhost:3000/activation/${activationToken}`;
 
-
-    const newUser = await User.create(user)  
+try {
+    await sendMail({
+        email:user.email,
+        subject: "Activate Your account",
+        message:`Hello ${user.name}, please click on thelin to activae your account:${activationUrl}`
+    })
     res.status(201).json({
         success:true,
-        newUser
+        message:`please check your email:- ${user.email} to activate your account!`
     })
+} catch (error) {
+    return next (new ErrorHandler(error.message,400))
+}
+   
     
 })
 //create activation token
@@ -53,3 +62,5 @@ const createActivationToken =(user)=>{
         expiresIn:"5m"
     })
 }
+
+//activate our user

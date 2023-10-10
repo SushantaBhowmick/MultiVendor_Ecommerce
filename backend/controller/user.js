@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const sendMail = require('../utils/sendMail');
+const sendToken = require('../utils/jwtToken');
 
 exports.register = catchAsyncErrors(async(req,res,next)=>{
     const {name,email,password} = req.body;
@@ -38,7 +39,7 @@ exports.register = catchAsyncErrors(async(req,res,next)=>{
     //     url:" myCloud.secure_url",
     // },
     const activationToken = createActivationToken(user);
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+    const activationUrl = `http://127.0.0.1:5173/activation/${activationToken}`;
 
 try {
     await sendMail({
@@ -64,3 +65,22 @@ const createActivationToken =(user)=>{
 }
 
 //activate our user
+exports.activation = catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {activation_token}= req.body;
+        const newUser = jwt.verify(activation_token,process.env.ACTIVATION_SECRET)
+        if(!newUser){
+            return next (new ErrorHandler("Invalid token",400))
+        }
+        const {name,email,password,avatar}= newUser;
+        User.create({
+            name,
+            email,
+            password,
+            avatar,
+        })
+        sendToken(newUser,201,res)
+    } catch (error) {
+        
+    }
+})

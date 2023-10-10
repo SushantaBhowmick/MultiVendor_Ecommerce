@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Routes,Route} from 'react-router-dom'
 import './App.css';
-import {LoginPage,SignUpPage} from './Routes.js'
+import {LoginPage,SignUpPage,ActivationPage} from './Routes.js'
 
 function App() {
 
@@ -10,6 +10,7 @@ function App() {
       <Routes>
         <Route path='/login' element={<LoginPage/>} />
         <Route path='/sign-up' element={<SignUpPage/>} />
+        <Route path='/activation/:url' element={<ActivationPage/>} />
       </Routes>
     </Router>
     </>

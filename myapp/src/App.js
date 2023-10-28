@@ -3,18 +3,17 @@ import './App.css';
 import {LoginPage,SignUpPage,ActivationPage} from './Routes.js'
 
 function App() {
-
   return (
     <>
     <Router>
       <Routes>
         <Route path='/login' element={<LoginPage/>} />
         <Route path='/sign-up' element={<SignUpPage/>} />
-        <Route path='/activation/:url' element={<ActivationPage/>} />
+        <Route path='/activation/:activation_token' element={<ActivationPage/>} />
       </Routes>
     </Router>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

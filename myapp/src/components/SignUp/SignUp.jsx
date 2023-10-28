@@ -4,11 +4,10 @@ import { RxAvatar } from "react-icons/rx";
 import styles from '../../style/styles'
 import { Link,useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { server } from "../../../server";
+import { server } from "../../server";
 
 
 const SignUp = () => {
-
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -43,7 +42,7 @@ const SignUp = () => {
 
     axios.post(`${server}/user/create-user`, myForm, config)
       .then((res) =>{
-       alert(res.message)
+       alert(res.data.message)       
       })
       .catch((err) => console.log(err))
   }

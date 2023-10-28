@@ -2,12 +2,28 @@ import { useState } from "react"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from '../../style/styles'
 import { Link } from "react-router-dom";
+import axios from "axios";
+import {server} from '../../server'
 
 const Login = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
+
+  const handleSubmit=async(e)=>{
+    e.preventDefault();
+   try {
+    const res = await axios.post(`${server}/user/login`,
+    {email,password},
+    {withCredentials:true});
+    
+    alert(res.data.message)
+   } catch (error) {
+    console.log(error)
+   }
+  }
+
   return (
 
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -81,6 +97,7 @@ const Login = () => {
             <div>
               <button
                 type="submit"
+                onClick={handleSubmit}
                 className="group relative w-full h-[40px] flex justify-center py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >Login</button>
             </div>
@@ -93,6 +110,9 @@ const Login = () => {
                 </Link>
               </div>
           </form>
+          <h1 className="text-3xl font-bold underline">
+      Hello world!
+    </h1>
         </div>
       </div>
     </div>

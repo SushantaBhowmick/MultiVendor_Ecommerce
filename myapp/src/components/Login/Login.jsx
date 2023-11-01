@@ -1,27 +1,29 @@
 import { useState } from "react"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from '../../style/styles'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import {server} from '../../server'
+import { server } from '../../server'
+import { toast } from "react-toastify";
 
 const Login = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit=async(e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-   try {
-    const res = await axios.post(`${server}/user/login`,
-    {email,password},
-    {withCredentials:true});
-    
-    alert(res.data.message)
-   } catch (error) {
-    console.log(error)
-   }
+    try {
+      const res = await axios.post(`${server}/user/login`,
+        { email, password },
+        { withCredentials: true });
+      toast.success(res.data.message);
+      navigate("/")
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
   }
 
   return (
@@ -32,7 +34,7 @@ const Login = () => {
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form action="" className="space-y-6">
+          <form action="" className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
               <div className="mt-1">
@@ -97,22 +99,21 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                onClick={handleSubmit}
                 className="group relative w-full h-[40px] flex justify-center py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >Login</button>
             </div>
             <div className={`${styles.noramlFlex} w-full`}>
               <h4>Not have any account?</h4>
-                <Link to={'/sign-up'}
-                  className=" text-blue-600 hover:text-blue-500  pl-2"
-                >
-                  Sign Up
-                </Link>
-              </div>
+              <Link to={'/sign-up'}
+                className=" text-blue-600 hover:text-blue-500  pl-2"
+              >
+                Sign Up
+              </Link>
+            </div>
           </form>
           <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+            Hello world!
+          </h1>
         </div>
       </div>
     </div>

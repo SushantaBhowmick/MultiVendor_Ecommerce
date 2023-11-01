@@ -95,9 +95,9 @@ exports.activation = catchAsyncErrors(async (req, res, next) => {
 exports.login = catchAsyncErrors(async (req, res, next) => {
     try {
         const { email,password } = req.body;
-        // if(!email || !password){
-        //     return next(new ErrorHandler("Enter all fields",400))
-        // }
+        if(!email || !password){
+            return next(new ErrorHandler("Enter all fields",400))
+        }
         let user = await User.findOne({ email }).select("+password");
         if (!user) {
             return next(new ErrorHandler("User Doesn't exists", 400));
@@ -107,6 +107,21 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Invalid credentials", 400));
     }
         sendToken(user, 200, res,`Welcome back ${user.name}`)
+    } catch (error) {
+        console.log(error)
+        return next(new ErrorHandler(error.message, 500))
+    }
+})
+
+//Load User
+exports.loadUser = catchAsyncErrors(async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.id);
+        res.status(200).json({
+            success:true,
+            user
+        })
+        
     } catch (error) {
         console.log(error)
         return next(new ErrorHandler(error.message, 500))

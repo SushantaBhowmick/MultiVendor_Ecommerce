@@ -5,6 +5,7 @@ import styles from '../../style/styles'
 import { Link,useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { server } from "../../server";
+import { toast } from "react-toastify";
 
 
 const SignUp = () => {
@@ -42,9 +43,14 @@ const SignUp = () => {
 
     axios.post(`${server}/user/create-user`, myForm, config)
       .then((res) =>{
-       alert(res.data.message)       
+        toast.success(res.data.message)
+        setName("");
+        setEmail("");
+        setPassword("");
+        setAvatar();
       })
-      .catch((err) => console.log(err))
+      .catch((err) =>toast.error(err.response.data.message)          
+      )
   }
 
   return (

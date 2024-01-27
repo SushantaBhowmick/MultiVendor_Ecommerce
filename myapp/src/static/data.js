@@ -330,7 +330,7 @@ export const navItems = [
       image_Url: [
         {
           public_id: "test",
-          url: "https://www.istorebangladesh.com/images/thumbs/0000286_macbook-pro-m1_550.png",
+          url: "https://inventstore.in/wp-content/uploads/2023/05/macbook-pro-13-silver.png",
         },
         {
           public_id: "test",

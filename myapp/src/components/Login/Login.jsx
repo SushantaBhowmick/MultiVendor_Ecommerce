@@ -21,7 +21,7 @@ const Login = () => {
         { withCredentials: true });
       toast.success(res.data.message);
       navigate("/")
-      window.location.reload();
+      window.location.reload(true);
     } catch (error) {
       toast.error(error.response.data.message)
     }

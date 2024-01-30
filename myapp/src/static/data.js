@@ -431,7 +431,7 @@ export const navItems = [
         name: "Asus Ltd",
         shop_avatar: {
           public_id: "test",
-          url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
+          url: "https://cdnb.artstation.com/p/assets/images/images/019/561/523/large/evan-winters-4.jpg?1564038613",
         },
         ratings: 4.2,
       },
@@ -492,7 +492,7 @@ export const navItems = [
         },
         {
           public_id: "test",
-          url: "https://eratablet.com/wp-content/uploads/2022/08/H51ba6537405f4948972e293927673546u.jpg",
+          url: "https://static-01.daraz.pk/p/d0615d88278546d58e36063fbd6cc4dd.png_300x0q75.webp",
         },
       ],
       shop: {

@@ -364,7 +364,7 @@ export const navItems = [
         },
         {
           public_id: "test",
-          url: "https://i0.wp.com/eccocibd.com/wp-content/uploads/2022/01/1802NL02_1.png?fit=550%2C550&ssl=1",
+          url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_NKgMCR0j4xIL66Wp_lp-F71TMjPjhgxvJg&usqp=CAU",
         },
       ],
       shop: {
@@ -463,7 +463,7 @@ export const navItems = [
         },
         {
           public_id: "test",
-          url: "https://i0.wp.com/eccocibd.com/wp-content/uploads/2022/01/1802NL02_1.png?fit=550%2C550&ssl=1",
+          url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_NKgMCR0j4xIL66Wp_lp-F71TMjPjhgxvJg&usqp=CAU",
         },
       ],
       shop: {

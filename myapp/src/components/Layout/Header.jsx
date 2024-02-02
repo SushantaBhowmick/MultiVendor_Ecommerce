@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { backend_url } from "../../server";
 import Cart from "../cart/Cart.jsx";
 import Wishlist from "../Wishlist/Wishlist.jsx";
+import { RxCross1 } from "react-icons/rx";
 
 const Header = ({ activeHeading }) => {
 
@@ -27,6 +28,7 @@ const Header = ({ activeHeading }) => {
   const [dropDown, setDropDown] = useState(false);
   const [openCart, setOpenCart] = useState(false);
   const [openwishlist, setOpenwishlist] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -57,6 +59,7 @@ const Header = ({ activeHeading }) => {
               <img
                 src="https://shopo.quomodothemes.website/assets/images/logo.svg"
                 alt="logo"
+                className="cursor-pointer"
               />
             </Link>
           </div>
@@ -190,6 +193,106 @@ const Header = ({ activeHeading }) => {
             }
           </div>
         </div>
+      </div>
+
+      {/* Mobile header */}
+      <div
+        className={`${
+          active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
+        }
+      w-full h-[60px] bg-[#fff] z-50 top-0 left-0 shadow-sm 800px:hidden`}
+      >
+            <div className="w-full flex items-center justify-between">
+              <div>
+                <BiMenuAltLeft 
+                size={40}
+                className="ml-4"
+                onClick={()=>setOpen(true)}
+                 />
+              </div>
+
+              <div>
+              <Link to={"/"}>
+              <img
+                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
+                alt="logo"
+                className="cursor-pointer  mt-3"
+              />
+            </Link>
+              </div>
+
+              <div className={`${styles.noramlFlex}`}>
+              <div className="relative cursor-pointer mr-[20px]"
+              onClick={()=>setOpenCart(true)}
+              >
+                <AiOutlineShoppingCart
+                  size={30}
+                  color={`#000`}
+                />
+                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                  1
+                </span>
+              </div>
+            </div>
+            </div>
+
+            {/* header sidebar */}
+            {open && (
+              <div className="fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0">
+                <div className="fixed w-[60%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll ">
+                  <div className="w-full justify-between flex pr-3">
+                    <div className="">
+                      <div className="relative mr-[15px]">
+                        <AiOutlineHeart
+                        size={30} className="mt-5 ml-3"
+                         />
+                         <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+                      1
+                    </span>
+                      </div>
+                    </div>
+                    <div className="">
+                      <RxCross1 
+                      size={25}
+                      className="ml-4 mt-5"
+                      onClick={()=>setOpen(false)}
+                       />
+                    </div>
+                  </div>
+
+                  <div className="my-8 m-auto w-[92%] h-[40px]">
+                  <input
+                  type="search"
+                  placeholder="Search Product..."
+                  className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+                 {searchData && (
+                  <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
+                    {searchData.map((i) => {
+                      const d = i.name;
+
+                      const Product_name = d.replace(/\s+/g, "-");
+                      return (
+                        <Link to={`/product/${Product_name}`}>
+                          <div className="flex items-center">
+                            <img
+                              src={i.image_Url[0]?.url}
+                              alt=""
+                              className="w-[40px] mr-2"
+                            />
+                            <h5>{i.name}</h5>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+                  </div>
+                </div>
+              </div>
+            )}
       </div>
     </>
   );

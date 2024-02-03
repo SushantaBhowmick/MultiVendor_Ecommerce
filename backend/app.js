@@ -31,8 +31,10 @@ if(process.env.NODE_ENV !== "PRODUCTION"){
 
 //imports Routes
 const userRoute = require('./routes/user')
+const shopRoute = require('./routes/shop')
 
 app.use("/api/v2/user",userRoute)
+app.use("/api/v2/seller",shopRoute)
 
 
 //its for ErrorHandler

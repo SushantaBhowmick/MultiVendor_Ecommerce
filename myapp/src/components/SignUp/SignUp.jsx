@@ -130,7 +130,7 @@ const SignUp = () => {
                     avatar ?
                       (
                       <img 
-                      src={avatar}
+                      src={URL.createObjectURL(avatar)}
                       alt="avatar"
                         className="h-full w-full object-cover rounded-full"
                       />) : (<RxAvatar className="w-8 h-8" />)

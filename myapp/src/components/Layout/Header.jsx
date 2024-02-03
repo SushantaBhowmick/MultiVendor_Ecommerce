@@ -19,8 +19,7 @@ import Wishlist from "../Wishlist/Wishlist.jsx";
 import { RxCross1 } from "react-icons/rx";
 
 const Header = ({ activeHeading }) => {
-
-  const {isAuthenticated,user} = useSelector(state=>state.user)
+  const { isAuthenticated, user } = useSelector((state) => state.user);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
@@ -98,7 +97,7 @@ const Header = ({ activeHeading }) => {
             ) : null}
           </div>
           <div className={`${styles.button}`}>
-            <Link to={"seller"}>
+            <Link to={"/shop-create"}>
               <h1 className="text-[#fff] flex items-center">
                 Become Seller <IoIosArrowForward />
               </h1>
@@ -140,8 +139,9 @@ const Header = ({ activeHeading }) => {
 
           <div className={`${styles.noramlFlex}`}>
             <div className={`${styles.noramlFlex}`}>
-              <div className="relative cursor-pointer mr-[15px]"
-              onClick={()=>setOpenwishlist(true)}
+              <div
+                className="relative cursor-pointer mr-[15px]"
+                onClick={() => setOpenwishlist(true)}
               >
                 <AiOutlineHeart size={30} color={`rgb(255 255 255/83%)`} />
                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
@@ -151,8 +151,9 @@ const Header = ({ activeHeading }) => {
             </div>
 
             <div className={`${styles.noramlFlex}`}>
-              <div className="relative cursor-pointer mr-[15px]"
-              onClick={()=>setOpenCart(true)}
+              <div
+                className="relative cursor-pointer mr-[15px]"
+                onClick={() => setOpenCart(true)}
               >
                 <AiOutlineShoppingCart
                   size={30}
@@ -166,31 +167,29 @@ const Header = ({ activeHeading }) => {
 
             <div className={`${styles.noramlFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
-                {isAuthenticated?(
+                {isAuthenticated ? (
                   <Link to="/profile">
-                  <img src={`${backend_url}${user.avatar}`} className={"w-[35px] h-[35px] rounded-full object-cover"} alt="dp" />
-                </Link>
-                ):(
+                    <img
+                      src={`${backend_url}${user.avatar}`}
+                      className={"w-[35px] h-[35px] rounded-full object-cover"}
+                      alt="dp"
+                    />
+                  </Link>
+                ) : (
                   <Link to="/login">
-                  <CgProfile size={30} color={`rgb(255 255 255/83%)`} />
-                </Link>
+                    <CgProfile size={30} color={`rgb(255 255 255/83%)`} />
+                  </Link>
                 )}
               </div>
             </div>
 
-              {/* cart popup */}
-            {
-              openCart?(
-                <Cart setOpenCart={setOpenCart} />
-              ):null
-            }
+            {/* cart popup */}
+            {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
 
-              {/* wishlist popup */}
-            {
-              openwishlist?(
-                <Wishlist setOpenwishlist={setOpenwishlist} />
-              ):null
-            }
+            {/* wishlist popup */}
+            {openwishlist ? (
+              <Wishlist setOpenwishlist={setOpenwishlist} />
+            ) : null}
           </div>
         </div>
       </div>
@@ -202,73 +201,69 @@ const Header = ({ activeHeading }) => {
         }
       w-full h-[60px] bg-[#fff] z-50 top-0 left-0 shadow-sm 800px:hidden`}
       >
-            <div className="w-full flex items-center justify-between">
-              <div>
-                <BiMenuAltLeft 
-                size={40}
-                className="ml-4"
-                onClick={()=>setOpen(true)}
-                 />
-              </div>
+        <div className="w-full flex items-center justify-between">
+          <div>
+            <BiMenuAltLeft
+              size={40}
+              className="ml-4"
+              onClick={() => setOpen(true)}
+            />
+          </div>
 
-              <div>
-              <Link to={"/"}>
+          <div>
+            <Link to={"/"}>
               <img
                 src="https://shopo.quomodothemes.website/assets/images/logo.svg"
                 alt="logo"
                 className="cursor-pointer  mt-3"
               />
             </Link>
-              </div>
+          </div>
 
-              <div className={`${styles.noramlFlex}`}>
-              <div className="relative cursor-pointer mr-[20px]"
-              onClick={()=>setOpenCart(true)}
-              >
-                <AiOutlineShoppingCart
-                  size={30}
-                  color={`#000`}
-                />
-                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                  1
-                </span>
-              </div>
+          <div className={`${styles.noramlFlex}`}>
+            <div
+              className="relative cursor-pointer mr-[20px]"
+              onClick={() => setOpenCart(true)}
+            >
+              <AiOutlineShoppingCart size={30} color={`#000`} />
+              <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                1
+              </span>
             </div>
-            </div>
+          </div>
+        </div>
 
-            {/* header sidebar */}
-            {open && (
-              <div className="fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0">
-                <div className="fixed w-[60%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll ">
-                  <div className="w-full justify-between flex pr-3">
-                    <div className="">
-                      <div className="relative mr-[15px]">
-                        <AiOutlineHeart
-                        size={30} className="mt-5 ml-3"
-                         />
-                         <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+        {/* header sidebar */}
+        {open && (
+          <div className="fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0">
+            <div className="fixed w-[60%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll ">
+              <div className="w-full justify-between flex pr-3">
+                <div className="">
+                  <div className="relative mr-[15px]">
+                    <AiOutlineHeart size={30} className="mt-5 ml-3" />
+                    <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
                       1
                     </span>
-                      </div>
-                    </div>
-                    <div className="">
-                      <RxCross1 
-                      size={25}
-                      className="ml-4 mt-5"
-                      onClick={()=>setOpen(false)}
-                       />
-                    </div>
                   </div>
+                </div>
+                <div className="">
+                  <RxCross1
+                    size={25}
+                    className="ml-4 mt-5"
+                    onClick={() => setOpen(false)}
+                  />
+                </div>
+              </div>
 
-                  <div className="my-8 m-auto w-[92%] h-[40px]">
-                  <input
+              <div className="my-8 m-auto w-[92%] h-[40px] relative">
+                <input
                   type="search"
                   placeholder="Search Product..."
                   className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
-                 {searchData && (
+                {searchData && (
                   <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
                     {searchData.map((i) => {
                       const d = i.name;
@@ -289,14 +284,43 @@ const Header = ({ activeHeading }) => {
                     })}
                   </div>
                 )}
-                  </div>
-                </div>
               </div>
-            )}
+
+              <Navbar active={activeHeading} />
+
+              <div className={`${styles.button} ml-5 !rounded-[4px]`}>
+                <Link to={"/shop-create"}>
+                  <h1 className="text-[#fff] flex items-center">
+                    Become Seller <IoIosArrowForward />
+                  </h1>
+                </Link>
+              </div>
+
+              <br />
+              <br />
+              <br />
+              <div className="flex w-full justify-center">
+              {isAuthenticated?(
+                <div className="">
+                  <Link to={'/profile'}>
+                  <img src={`${backend_url}${user.avatar}`} alt=""
+                  className="h-[60px] w-[60px] rounded-full object-cover border-[3px] border-[#0eae88]"
+                   />
+                  </Link>
+                </div>
+              ):(
+                <>
+                <Link to={'/login'} className="text-[16px] pr-[10px] text-[#000000b7]">Login {" "}/ </Link>
+                <Link to={'/login'} className="text-[16px] text-[#000000b7]">Sign Up</Link>
+                </>
+              )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
 };
-
 
 export default Header;

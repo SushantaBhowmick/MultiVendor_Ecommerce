@@ -8,6 +8,7 @@ const sendMail = require('../utils/sendMail');
 const sendToken = require('../utils/jwtToken');
 
 exports.register = catchAsyncErrors(async (req, res, next) => {
+    try{
     const { name, email, password } = req.body;
     const userEmail = await User.findOne({ email })
     if (userEmail) {
@@ -15,8 +16,7 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
         const filePath = `uploads/${fileName}`;
         fs.unlink(filePath, (err) => {
             if (err) {
-                console.log(err)
-                res.status(500).json({ message: "deleting file" })
+                return res.status(500).json({ message: "deleting file" })
             }
         })
         return next(new ErrorHandler("User already exists", 400))
@@ -50,9 +50,11 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
             message: `please check your email:- ${user.email} to activate your account!`
         })
     } catch (error) {
-        return next(new ErrorHandler(error.message, 400))
+        return next(new ErrorHandler(error.message, 500))
     }
-
+} catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
 
 })
 //create activation token

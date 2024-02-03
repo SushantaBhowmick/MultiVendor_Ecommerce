@@ -43,7 +43,7 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
         await sendMail({
             email: user.email,
             subject: "Activate Your account",
-            message: `Hello ${user.name}, please click on thelin to activae your account:${activationUrl}`
+            message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`
         })
         res.status(201).json({
             success: true,
@@ -119,6 +119,9 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
 exports.loadUser = catchAsyncErrors(async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);
+        if(!user){
+            return next(new ErrorHandler("User doesn't exists"))
+          }
         res.status(200).json({
             success:true,
             user

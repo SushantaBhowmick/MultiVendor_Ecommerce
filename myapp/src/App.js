@@ -12,23 +12,28 @@ import {
   ProductDetailsPage,
   ProfilePage,
   ShopCreatePage,
-  SellerActivationPage
+  SellerActivationPage,
+  ShopLoginPage,
 } from "./Routes.js";
+import { ShopHomePage } from "./ShopRoutes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "./redux/actions/user.js";
 import ProtectedRoute from "./ProtectedRoute.js";
+import { loadSeller } from "./redux/actions/seller.js";
+import SellerProtectedRoute from "./SellerProtectedRoute.js";
 
 function App() {
   const dispatch = useDispatch();
 
-  // const {isAuthenticated} =useSelector(state=>state.user)
+  const { isSeller, seller } = useSelector((state) => state.seller);
 
   useEffect(() => {
     dispatch(loadUser());
-  });
+    dispatch(loadSeller());
+  }, [dispatch]);
 
   return (
     <>
@@ -50,14 +55,27 @@ function App() {
           <Route path="/best-selling" element={<BestSellingPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/faq" element={<FAQPage />} />
-          
-        <Route path='/profile' element={<ProtectedRoute>
-          <ProfilePage />
-        </ProtectedRoute>
-        }/>
 
-<Route path="/shop-create" element={<ShopCreatePage />} />
-         
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* shop routes */}
+          <Route path="/shop-create" element={<ShopCreatePage />} />
+          <Route path="/shop-login" element={<ShopLoginPage />} />
+          <Route
+            path="/shop/:id"
+            element={
+              <SellerProtectedRoute>
+                <ShopHomePage />
+              </SellerProtectedRoute>
+            }
+          />
         </Routes>
 
         <ToastContainer

@@ -6,6 +6,7 @@ const path = require("path");
 const sendMail = require("../utils/sendMail");
 const jwt = require('jsonwebtoken');
 const sendToken = require("../utils/jwtToken");
+const shopToken = require("../utils/shopToken");
 
 exports.createShop = catchAsyncErrors(async (req, res, next) => {
   try {
@@ -43,7 +44,7 @@ exports.createShop = catchAsyncErrors(async (req, res, next) => {
       await sendMail({
         email: seller.email,
         subject: "Activate Your Shop",
-        message: `Hello ${seller.name}, please click on thelin to activae your account:${activationUrl}`,
+        message: `Hello ${seller.name}, please click on the link to activate your account: ${activationUrl}`,
       });
       res.status(201).json({
         success: true,
@@ -92,8 +93,64 @@ exports.shopActivation = catchAsyncErrors(async (req, res, next) => {
       address,
       phoneNumber,
     });
-    sendToken(seller, 201, res, "Account activated successfully!");
+    shopToken(seller, 201, res, "Account activated successfully!");
+    
+    try {
+      await sendMail({
+        email: seller.email,
+        subject: "Congatulation's from ShopO Ecommerce",
+        message: `Congatulation's ${seller.name}, your Seller account has been created successfully! in ShopO Ecommerce`,
+      });
+      res.status(201).json({
+        success: true,
+        message: `Hey ${seller.name}, your Seller account has been created successfully!`,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
   }
 });
+
+
+
+//Login Seller
+exports.login = catchAsyncErrors(async (req, res, next) => {
+  try {
+      const { email,password } = req.body;
+      if(!email || !password){
+          return next(new ErrorHandler("Enter all fields",400))
+      }
+      let seller = await Shop.findOne({ email }).select("+password");
+      if (!seller) {
+          return next(new ErrorHandler("Seller Doesn't exists", 400));
+      }
+    const isMatch = await seller.comparePassword(password);
+    if (!isMatch) {
+      return next(new ErrorHandler("Invalid credentials", 400));
+  }
+      shopToken(seller, 200, res,`Welcome back ${seller.name}`)
+  } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler(error.message, 500))
+  }
+})
+
+//Load Shop
+exports.loadSeller = catchAsyncErrors(async (req, res, next) => {
+  try {
+      const seller = await Shop.findById(req.seller.id);
+      if(!seller){
+        return next(new ErrorHandler("Seller doesn't exists"))
+      }
+      res.status(200).json({
+          success:true,
+          seller
+      })
+      
+  } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler(error.message, 500))
+  }
+})

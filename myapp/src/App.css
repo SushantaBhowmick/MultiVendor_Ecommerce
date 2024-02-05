@@ -28,3 +28,15 @@
     top: -9%;
     cursor: pointer;
   }
+
+  
+::-webkit-scrollbar{
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.2);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  background: hsla(0,0%,100%,.1);
+}

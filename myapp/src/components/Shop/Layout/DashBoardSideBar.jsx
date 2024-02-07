@@ -9,7 +9,7 @@ import { BiMessageSquareDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
 
-const DashBoardSideBar = ({ active, setActive }) => {
+const DashBoardSideBar = ({ active }) => {
   return (
     <div className="w-full h-[89vh] z-10 bg-white shadow-sm overflow-y-scroll static top-0 left-0">
 

@@ -15,7 +15,7 @@ import {
   SellerActivationPage,
   ShopLoginPage,
 } from "./routes/Routes.js";
-import { ShopHomePage,ShopDashboardPage } from "./routes/ShopRoutes.js";
+import { ShopHomePage,ShopDashboardPage,ShopCreateProduct } from "./routes/ShopRoutes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
@@ -83,6 +83,15 @@ function App() {
               </SellerProtectedRoute>
             }
           />
+          <Route
+            path="/dashboard-create-product"
+            element={
+              <SellerProtectedRoute>
+                <ShopCreateProduct />
+              </SellerProtectedRoute>
+            }
+          />
+
         </Routes>
 
         <ToastContainer

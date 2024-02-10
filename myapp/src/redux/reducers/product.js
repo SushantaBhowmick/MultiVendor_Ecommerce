@@ -6,7 +6,7 @@ const initialState = {
 }
 
 export const productReducer = createReducer(initialState,{
-    
+    // Create product
     productCreateRequest:(state)=>{
         state.isLoading=true;
     },
@@ -20,6 +20,24 @@ export const productReducer = createReducer(initialState,{
         state.error = action.payload;
         state.success= false;
     },
+
+    // Get all products shop
+    getAllProductShopRequest:(state)=>{
+        state.isLoading=true;
+    },
+    getAllProductShopSuccess:(state,action)=>{
+        state.isLoading=false;
+        state.products = action.payload;
+        state.success= true;
+    },
+    getAllProductShopFail:(state,action)=>{
+        state.isLoading=false;
+        state.error = action.payload;
+        state.success= false;
+    },
+
+
+
     clearErrors:(state)=>{
         state.error=null
     },

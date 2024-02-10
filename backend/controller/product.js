@@ -27,3 +27,19 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler(error.message, 400));
   }
 });
+
+// Get all produts by shop
+exports.getAllProductsShop = catchAsyncErrors(async (req, res, next) => {
+  try {
+      const products = await Product.find({shopId:req.params.id})
+
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
+
+

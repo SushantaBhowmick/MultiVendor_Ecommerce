@@ -4,8 +4,7 @@ import Loader from "../components/Layout/Loader";
 
 const SellerProtectedRoute = ({ children }) => {
   // const navigate=useNavigate()
-  const {isLoading,isSeller,seller} = useSelector(state=>state.seller)
-  console.log(isSeller,seller)
+  const {isLoading,isSeller} = useSelector(state=>state.seller)
     if(isLoading===true){
       return <Loader />
     }else{

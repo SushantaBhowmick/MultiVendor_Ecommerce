@@ -58,3 +58,31 @@ export const getAllProductsShop = (id) => async (dispatch) => {
     });
   }
 };
+
+// Delete Product
+export const deleteProductShop = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: "deleteProductShopRequest" });
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    const {data} = await axios.delete(
+      `${server}/product/delete-shop-product/${id}`,{withCredentials:true},
+      config
+    );
+
+    dispatch({
+      type: "deleteProductShopSuccess",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "deleteProductShopFail",
+      payload: error.response.data.message,
+    });
+  }
+};

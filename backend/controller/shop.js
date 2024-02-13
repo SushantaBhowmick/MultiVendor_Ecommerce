@@ -154,3 +154,21 @@ exports.loadSeller = catchAsyncErrors(async (req, res, next) => {
       return next(new ErrorHandler(error.message, 500))
   }
 })
+
+//Logout User
+exports.logoutSeller = catchAsyncErrors(async (req, res, next) => {
+  try {
+     res.cookie("seller_token",null,{
+      expires:new Date(Date.now()),
+      httpOnly:true,
+     });
+     res.status(200).json({
+      success:true,
+      message:"LogOut successfully!"
+     })
+      
+  } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler(error.message, 500))
+  }
+})

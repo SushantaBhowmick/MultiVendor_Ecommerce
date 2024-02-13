@@ -1,14 +1,22 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { backend_url } from "../../server";
+import { backend_url, server } from "../../server";
 import { Link } from "react-router-dom";
 import styles from "../../style/styles";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const ShopInfo = ({ isOwner }) => {
   const { seller } = useSelector((state) => state.seller);
 
-  const logoutHandler=()=>{
-    
+  const logoutHandler=async()=>{
+    await axios.get(`${server}/seller/logout`,{withCredentials:true})
+    .then((res)=>{
+      toast.success(res.data.message)
+      window.location.reload()
+    }).catch((err)=>{
+      toast.error(err.response.data.message)
+    })
   }
 
   return (

@@ -15,7 +15,13 @@ import {
   SellerActivationPage,
   ShopLoginPage,
 } from "./routes/Routes.js";
-import { ShopHomePage,ShopDashboardPage,ShopCreateProduct,ShopAllProducts } from "./routes/ShopRoutes.js";
+import {
+  ShopHomePage,
+  ShopDashboardPage,
+  ShopCreateProduct,
+  ShopAllProducts,
+  ShopCreateEvents
+} from "./routes/ShopRoutes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
@@ -27,7 +33,6 @@ import SellerProtectedRoute from "./protectedRoutes/SellerProtectedRoute.js";
 
 function App() {
   const dispatch = useDispatch();
-
 
   useEffect(() => {
     dispatch(loadUser());
@@ -99,7 +104,14 @@ function App() {
               </SellerProtectedRoute>
             }
           />
-
+          <Route
+            path="/dashboard-create-event"
+            element={
+              <SellerProtectedRoute>
+                <ShopCreateEvents />
+              </SellerProtectedRoute>
+            }
+          />
         </Routes>
 
         <ToastContainer

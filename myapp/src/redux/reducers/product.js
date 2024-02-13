@@ -28,12 +28,23 @@ export const productReducer = createReducer(initialState,{
     getAllProductShopSuccess:(state,action)=>{
         state.isLoading=false;
         state.products = action.payload;
-        state.success= true;
     },
     getAllProductShopFail:(state,action)=>{
         state.isLoading=false;
         state.error = action.payload;
-        state.success= false;
+    },
+
+    // delete products shop
+    deleteProductShopRequest:(state)=>{
+        state.isLoading=true;
+    },
+    deleteProductShopSuccess:(state,action)=>{
+        state.isLoading=false;
+        state.message = action.payload;
+    },
+    deleteProductShopFail:(state,action)=>{
+        state.isLoading=false;
+        state.error = action.payload;
     },
 
 

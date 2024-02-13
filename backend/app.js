@@ -33,10 +33,12 @@ if(process.env.NODE_ENV !== "PRODUCTION"){
 const userRoute = require('./routes/user')
 const shopRoute = require('./routes/shop')
 const prodRoute = require('./routes/product')
+const eventRoute = require('./routes/event')
 
 app.use("/api/v2/user",userRoute)
 app.use("/api/v2/seller",shopRoute)
 app.use("/api/v2/product",prodRoute)
+app.use("/api/v2/event",eventRoute)
 
 
 //its for ErrorHandler

@@ -2,6 +2,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Product = require("../model/Product");
 const Shop = require("../model/Shop");
 const ErrorHandler = require("../utils/ErrorHandler");
+const fs = require("fs");
 
 
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
@@ -48,9 +49,23 @@ exports.deleteProductShop = catchAsyncErrors(async (req, res, next) => {
   try {
      const productId = req.params.id;
      
-     const product = await Product.findByIdAndDelete(productId);
+     const product = await Product.findById(productId);
 
      if(!product) return next(new ErrorHandler('Product not found with this id!',500));
+
+     product.images.forEach((imageUrl) => {
+      const filename = imageUrl;
+      const filePath = `uploads/${filename}`;
+
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    });
+    
+    await Product.findByIdAndDelete(productId)
+
 
      res.status(200).json({
       success:true,

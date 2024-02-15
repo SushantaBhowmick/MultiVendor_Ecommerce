@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { categoriesData } from "../../static/data";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { createProduct } from "../../redux/actions/product";
 import {toast} from 'react-toastify'
+import { createEvent } from "../../redux/actions/event";
 
 const CreateEvent = () => {
   const { seller } = useSelector((state) => state.seller);
-  const { isLoading,success,error } = useSelector((state) => state.product);
+  const {success,error,message } = useSelector((state) => state.event);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -45,12 +45,13 @@ const CreateEvent = () => {
       toast.error(error)
     }
     if(success){
-      toast.success("Product created Successfully");
-      navigate('/dashboard');
+      toast.success("Event created Successfully");
+      navigate('/dashboard-events');
       window.location.reload();
 
     }
-  }, [error,success,navigate,dispatch])
+    console.log(message)
+  }, [error,success,navigate,dispatch,message])
   
   
   const handleSubmit = (e) => {
@@ -68,8 +69,10 @@ const CreateEvent = () => {
     newForm.append("discountPrice",discountPrice)
     newForm.append("stock",stock);
     newForm.append("shopId",seller._id);
+    newForm.append("start_Date",startDate.toISOString());
+    newForm.append("Finish_Date",endDate.toISOString());
 
-    dispatch(createProduct(newForm))
+    dispatch(createEvent(newForm))
   };
 
   const handleImageChange = (e) => {
@@ -222,7 +225,7 @@ const CreateEvent = () => {
             id="end-date"
             name="stock"
             value={endDate?endDate.toISOString().slice(0,10):""}
-            onChange={(e) =>handleStartDateChange(e)}
+            onChange={(e) =>handleEndDateChange(e)}
             required
             min={minEndDate}
             className="mt-2 appearance-none block w-full px-3 h-[40px] border border-gray-300 rounded-[3px] placeholder:gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm "

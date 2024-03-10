@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../style/styles";
 import {
@@ -7,12 +7,22 @@ import {
   AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { backend_url } from "../../server";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProductsShop } from "../../redux/actions/product";
 
 const ProductDetails = ({ data }) => {
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { products } = useSelector((state) => state.product);
+
+
+  useEffect(() => {
+    dispatch(getAllProductsShop(data && data?.shop._id));
+  }, [data,dispatch]);
 
   const decrementCount = () => {
     if (count > 1) {
@@ -37,18 +47,18 @@ const ProductDetails = ({ data }) => {
               <div className="block w-full 800px:flex">
                 <div className="w-full 800px:w-[50%]">
                   <img
-                    src={`${data && data.image_Url[select].url}`}
+                    src={`${backend_url}${data.images && data.images[select]}`}
                     alt=""
                     className="w-[80%]"
                   />
-                  <div className="w-full flex">
+                  {/* <div className="w-full flex">
                     <div
                       className={`${
                         select === 0 ? "border" : "null"
                       } cursor-pointer`}
                     >
                       <img
-                        src={data?.image_Url[0].url}
+                       src={`${backend_url}${data.images && data.images[0]}`}
                         alt=""
                         className="h-[200px] overflow-hidden mr-3 mt-3"
                         onClick={() => setSelect(0)}
@@ -60,13 +70,36 @@ const ProductDetails = ({ data }) => {
                       } cursor-pointer`}
                     >
                       <img
-                        src={data?.image_Url[1].url}
+                       src={`${backend_url}${data.images && data.images[1]}`}
                         alt=""
                         className="h-[200px] overflow-hidden mr-3 mt-3"
                         onClick={() => setSelect(1)}
                       />
                     </div>
-                  </div>
+                  </div> */}
+
+                  <div className="w-full flex flex-wrap">
+                  {data &&
+                    data.images.map((i, index) => (
+                      <div
+                        className={`${
+                          select === 0 ? "border" : "null"
+                        } cursor-pointer`}
+                      >
+                        <img
+                          src={`${backend_url}${i}`}
+                          alt=""
+                          className="h-[200px] overflow-hidden mr-3 mt-3"
+                          onClick={() => setSelect(index)}
+                        />
+                      </div>
+                    ))}
+                  <div
+                    className={`${
+                      select === 1 ? "border" : "null"
+                    } cursor-pointer`}
+                  ></div>
+                </div>
                 </div>
 
                 <div className="w-full 800px:w-[50%] pt-10">
@@ -128,8 +161,9 @@ const ProductDetails = ({ data }) => {
                     </span>
                   </div>
                   <div className="flex items-center pt-8 ">
-                    <img
-                      src={data.shop.shop_avatar.url}
+                  <Link to={`/shop/preview/${data.shop._id}`} className="flex items-center">
+                  <img
+                      src={`${backend_url}${data.shop && data.shop.avatar}`}
                       alt="brand"
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
@@ -138,9 +172,11 @@ const ProductDetails = ({ data }) => {
                         {data.shop.name}
                       </h3>
                       <h5 className="pb-3 text-[15px]">
-                        ({data.shop.ratings}) Ratings
+                        {/* ({data.shop.ratings}) Ratings */}
+                        (4/5) Ratings
                       </h5>
                     </div>
+                  </Link>
                     <div
                       className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11`}
                       onClick={handleMessageSubmit}
@@ -153,7 +189,7 @@ const ProductDetails = ({ data }) => {
                 </div>
               </div>
             </div>
-            <ProductDetailsInfo data={data} />
+            <ProductDetailsInfo data={data} products={products} />
             <br />
             <br />
           </div>
@@ -163,7 +199,7 @@ const ProductDetails = ({ data }) => {
   );
 };
 
-const ProductDetailsInfo = ({ data }) => {
+const ProductDetailsInfo = ({ data,products }) => {
   const [active, setActive] = useState(1);
 
   return (
@@ -213,12 +249,6 @@ const ProductDetailsInfo = ({ data }) => {
           <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
             {data.description}
           </p>
-          <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
-            {data.description}
-          </p>
-          <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
-            {data.description}
-          </p>
         </>
       ) : null}
 
@@ -233,34 +263,32 @@ const ProductDetailsInfo = ({ data }) => {
           <div className="w-full 800px:w-[50%]">
             <div className="flex items-center">
               <img
-                src={data.shop.shop_avatar.url}
+                src={`${backend_url}${data.shop && data.shop.avatar}`}
                 className="w-[50px] h-[50px] rounded-full"
                 alt=""
               />
               <div className="pl-3">
                 <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
                 <h5 className="pb-2 text-[15px]">
-                  ({data.shop.ratings}) Ratings
+                  {/* ({data.shop.ratings}) Ratings */}
+                  (4/5) Ratings
                 </h5>
               </div>
             </div>
               <p className="pt-2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Distinctio tempora deleniti ipsam iure harum blanditiis vero
-                excepturi ex! Eaque praesentium distinctio ipsum quisquam magnam
-                id officia quo voluptatum. Eaque, id.
+               {data.shop.description}
               </p>
           </div>
 
           <div className="full 800px:w-[50%] mt-5 800px:flex flex-col items-end">
             <div className="text-left">
               <h5 className="font-[600]">
-                Joined on: <span>01 Feb,2024</span>
+                Joined on: <span>{data.shop.createdAt?.slice(0,10)}</span>
               </h5>
               <h5 className="font-[600] pt-3">
                 Total Products:{" "}
                 <span className="font-[500]">
-                1,223
+               {products && products.length}
                 </span>
               </h5>
               <h5 className="font-[600] pt-3">

@@ -22,7 +22,8 @@ import {
   ShopAllProducts,
   ShopCreateEvents,
   ShopAllEvents,
-  ShopAllCoupouns
+  ShopAllCoupouns,
+  ShopPreviewPage
 } from "./routes/ShopRoutes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -32,6 +33,7 @@ import { loadUser } from "./redux/actions/user.js";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute.js";
 import { loadSeller } from "./redux/actions/seller.js";
 import SellerProtectedRoute from "./protectedRoutes/SellerProtectedRoute.js";
+import { getAllProducts } from "./redux/actions/product.js";
 
 function App() {
   const dispatch = useDispatch();
@@ -39,6 +41,7 @@ function App() {
   useEffect(() => {
     dispatch(loadUser());
     dispatch(loadSeller());
+    dispatch(getAllProducts());
   }, [dispatch]);
 
   return (
@@ -57,7 +60,7 @@ function App() {
             element={<SellerActivationPage />}
           />
           <Route path="/products" element={<ProductPage />} />
-          <Route path="/product/:name" element={<ProductDetailsPage />} />
+          <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/best-selling" element={<BestSellingPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/faq" element={<FAQPage />} />
@@ -71,6 +74,7 @@ function App() {
             }
           />
 
+          <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
           {/* shop routes */}
           <Route path="/shop-create" element={<ShopCreatePage />} />
           <Route path="/shop-login" element={<ShopLoginPage />} />

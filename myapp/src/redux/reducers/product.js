@@ -48,6 +48,33 @@ export const productReducer = createReducer(initialState,{
     },
 
 
+    // // delete products shop
+    // deleteProductShopRequest:(state)=>{
+    //     state.isLoading=true;
+    // },
+    // deleteProductShopSuccess:(state,action)=>{
+    //     state.isLoading=false;
+    //     state.message = action.payload;
+    // },
+    // deleteProductShopFail:(state,action)=>{
+    //     state.isLoading=false;
+    //     state.error = action.payload;
+    // },
+
+    // Get all products shop
+    getAllProductRequest:(state)=>{
+        state.isLoading=true;
+    },
+    getAllProductSuccess:(state,action)=>{
+        state.isLoading=false;
+        state.allProducts = action.payload;
+    },
+    getAllProductFail:(state,action)=>{
+        state.isLoading=false;
+        state.error = action.payload;
+    },
+
+
 
     clearErrors:(state)=>{
         state.error=null

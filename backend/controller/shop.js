@@ -172,3 +172,20 @@ exports.logoutSeller = catchAsyncErrors(async (req, res, next) => {
       return next(new ErrorHandler(error.message, 500))
   }
 })
+
+//get shop info
+exports.getShopInfo = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const shop = await Shop.findById(req.params.id)
+    if(!shop){
+      return next(new ErrorHandler("Shop not found",400));
+    }
+    res.status(200).json({
+      success:true,
+      shop
+    })
+  } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler(error.message, 500))
+  }
+})

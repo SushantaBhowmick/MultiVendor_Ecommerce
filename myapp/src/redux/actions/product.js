@@ -86,3 +86,31 @@ export const deleteProductShop = (id) => async (dispatch) => {
     });
   }
 };
+
+// Get all Products
+export const getAllProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: "getAllProductRequest" });
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    const {data} = await axios.get(
+      `${server}/product/get-all-products`,
+      config
+    );
+
+    dispatch({
+      type: "getAllProductSuccess",
+      payload: data.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: "getAllProductFail",
+      payload: error.response.data.message,
+    });
+  }
+};

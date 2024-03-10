@@ -78,3 +78,17 @@ exports.deleteProductShop = catchAsyncErrors(async (req, res, next) => {
 });
 
 
+// Get all produts 
+exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
+  try {
+      const products = await Product.find({})
+
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
+

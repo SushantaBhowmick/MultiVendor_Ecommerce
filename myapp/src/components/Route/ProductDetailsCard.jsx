@@ -7,6 +7,8 @@ import {
   AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { backend_url } from "../../server";
+import { Link } from "react-router-dom";
 
 const ProductDetailsCard = ({ setOpen, data }) => {
   const [count, setCount] = useState(1);
@@ -37,10 +39,11 @@ const ProductDetailsCard = ({ setOpen, data }) => {
               />
               <div className="blcok w-full 800px:flex ">
                 <div className="w-full 800px:w-[50%]">
-                  <img src={data.image_Url[0].url} alt="product" />
-                  <div className="flex">
+                  <img src={`${backend_url}${data.images[0]}`} alt="product" />
+                 <Link to={`/shop/preview/${data.shop._id}`}>
+                 <div className="flex">
                     <img
-                      src={data.shop.shop_avatar.url}
+                      src={`${backend_url}${data.shop.avatar}`}
                       alt="shop avatar"
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
@@ -53,6 +56,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                       </h5>
                     </div>
                   </div>
+                 </Link>
                   <div
                     className={`${styles.button} bg-[#000] mt-4 rounded-[4px] h-11`}
                     onClick={handleMessageSubmit}

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Layout/Header";
 import styles from "../style/styles";
 import { useSearchParams } from "react-router-dom";
-import { productData } from "../static/data";
 import ProductCard from "../components/Route/ProductCard";
 import { useSelector } from "react-redux";
 import Loader from "../components/Layout/Loader";
@@ -12,12 +11,11 @@ const ProductPage = () => {
   const categoryData = searchParams.get("category");
   const [data, setData] = useState([]);
   const {allProducts,isLoading} = useSelector(state=>state.product)
-  console.log(allProducts)
 
 
   useEffect(() => {
     if (categoryData === null) {
-      const d = allProducts && allProducts.sort((a,b)=>a.sold_out-b.sold_out);
+      const d = allProducts 
       setData(d);
     } else {
       const d =

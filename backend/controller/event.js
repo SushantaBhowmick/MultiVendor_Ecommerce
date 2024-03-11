@@ -43,6 +43,20 @@ exports.getAllEventsShop = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
+// Get all events by shop
+exports.getAllEvents = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const events = await Event.find();
+
+    res.status(200).json({
+      success: true,
+      events,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
+
 // delete events of shop
 exports.deleteEventShop = catchAsyncErrors(async (req, res, next) => {
   try {

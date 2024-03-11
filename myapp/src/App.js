@@ -34,6 +34,7 @@ import ProtectedRoute from "./protectedRoutes/ProtectedRoute.js";
 import { loadSeller } from "./redux/actions/seller.js";
 import SellerProtectedRoute from "./protectedRoutes/SellerProtectedRoute.js";
 import { getAllProducts } from "./redux/actions/product.js";
+import { getAllevents } from "./redux/actions/event.js";
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ function App() {
     dispatch(loadUser());
     dispatch(loadSeller());
     dispatch(getAllProducts());
+    dispatch(getAllevents());
   }, [dispatch]);
 
   return (

@@ -1,43 +1,39 @@
 import React from "react";
 import styles from "../../../style/styles.js";
 import CountDown from './CountDown.jsx'
+import { backend_url } from "../../../server.js";
 
-const EventCard = ({active}) => {
+const EventCard = ({active,data}) => {
+  console.log(data)
   return (
     <>
       <div className={`w-full block bg-white rounded-lg ${active?"unset":"mb-12"} lg:flex p-2 mb-12`}>
         <div className="w-full lg:-w[50%] m-auto">
           <img
-            src={`https://m.media-amazon.com/images/I/31Vle5fVdaL.jpg`}
+            src={`${backend_url}${data.images[0]}`}
             alt="event"
           />
         </div>
         <div className="w-full lg:[w-50%] flex flex-col justify-center">
-          <h2 className={`${styles.productTitle}`}>Iphone 14pro max 8/256gb</h2>
+          <h2 className={`${styles.productTitle}`}>{data && data.name}</h2>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
-            pariatur quisquam officia libero minus reprehenderit aliquid
-            cupiditate illum, harum ea mollitia vero culpa itaque animi sapiente
-            iusto, optio quidem sit.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
-            pariatur quisquam officia libero minus reprehenderit aliquid
-            cupiditate illum, harum ea mollitia vero culpa itaque animi sapiente
-            iusto, optio quidem sit.
+           {data && data.description}
           </p>
           <div className="flex py-2 justify-between">
             <div className="flex">
                 <h5 className="font-[500] text-[18px] text-[#d55b45] pr-3 line-through">
-                    1099$
+                    {data.originalPrice}$
                 </h5>
                 <h5 className="font-bold text-[20px] text-[#333] font-Roboto">
-                    999$
+                {data.discountPrice}$
+
                 </h5>
             </div>
             <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
-                120 sold
+                {data.stock} sold
             </span>
           </div>
-          <CountDown />
+          <CountDown data={data} />
         </div>
       </div>
     </>

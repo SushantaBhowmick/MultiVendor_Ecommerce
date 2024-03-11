@@ -32,7 +32,7 @@ export const createEvent = (newForm) => async (dispatch) => {
   }
 };
 
-// Get all event
+// Get all event by shop
 export const getAlleventsShop = (id) => async (dispatch) => {
   try {
     dispatch({ type: "getAlleventShopRequest" });
@@ -55,6 +55,34 @@ export const getAlleventsShop = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAlleventShopFail",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Get all events
+export const getAllevents = () => async (dispatch) => {
+  try {
+    dispatch({ type: "getAlleventsRequest" });
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    const {data} = await axios.get(
+      `${server}/event/get-all-events`,
+      config
+    );
+
+    dispatch({
+      type: "getAlleventsSuccess",
+      payload: data.events,
+    });
+  } catch (error) {
+    dispatch({
+      type: "getAlleventsFail",
       payload: error.response.data.message,
     });
   }

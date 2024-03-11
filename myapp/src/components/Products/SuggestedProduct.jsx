@@ -5,9 +5,8 @@ import { useSelector } from "react-redux";
 
 const SuggestedProduct = ({ data }) => {
   const [product, setProduct] = useState();
-  const {allProducts,products} = useSelector(state=>state.product)
-  console.log(products)
-  console.log("all",allProducts)
+  const {allProducts} = useSelector(state=>state.product)
+
 
   useEffect(() => {
     const d =

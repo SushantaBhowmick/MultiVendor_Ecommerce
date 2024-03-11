@@ -21,6 +21,8 @@ const ProfileContnet = ({ active, setActive }) => {
     e.preventDefault();
   };
 
+
+
   return (
     <div className="w-full">
       {/* Profile  */}
@@ -111,9 +113,8 @@ const ProfileContnet = ({ active, setActive }) => {
                 <div className="w-[100%] 800px:w-[50%]">
                   <label className="blcok pb-2">Address 2</label>
                   <input
-                    type="number"
+                    type="text"
                     className={`${styles.input} !w-[95%]`}
-                    required
                     value={address2}
                     onChange={(e) => setAddress2(e.target.value)}
                   />

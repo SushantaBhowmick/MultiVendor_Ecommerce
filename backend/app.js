@@ -7,6 +7,7 @@ const cors = require('cors')
 
 const app = express();
 
+//for scalable backend i want to add cluster
 
 //middleware
 app.use(express.json())

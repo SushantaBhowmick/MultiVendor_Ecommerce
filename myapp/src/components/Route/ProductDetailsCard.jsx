@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import styles from "../../style/styles";
 import {
@@ -12,13 +12,39 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addTocart } from "../../redux/actions/cart";
+import { addTowishlist, removeFromWishlist } from "../../redux/actions/wishlist";
 
 const ProductDetailsCard = ({ setOpen, data }) => {
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   // const [select, setSelect] = useState(false);
   const {cart} = useSelector(state=>state.cart)
+  const {wishlist} = useSelector(state=>state.wishlist)
 const dispatch = useDispatch();
+
+const removeFromWishlistHandler=(data)=>{
+  setClick(!click)
+  dispatch(removeFromWishlist(data))
+  toast.warn("Item removed from wishlist")
+}
+const addToWishlistHandler=(data)=>{
+  if(wishlist.length>4){
+    toast.error("Your wishlist limit has exceed")
+  }else{
+    setClick(!click)
+    dispatch(addTowishlist(data))
+    toast.success("Item added to wishlist")
+  }
+}
+
+
+useEffect(()=>{
+  if(wishlist && wishlist.find((i)=>i._id === data._id)){
+    setClick(true)
+  }else{
+    setClick(false)
+  }
+},[wishlist,data._id])
 
 
   const handleMessageSubmit = () => {};
@@ -128,8 +154,7 @@ const dispatch = useDispatch();
                         <AiFillHeart
                           size={30}
                           className="cursor-pointer"
-                          // onClick={() => removeFromWishlistHandler(data)}
-                          onClick={() => setClick(!click)}
+                          onClick={() => removeFromWishlistHandler(data)}
                           color={click ? "red" : "#333"}
                           title="Remove from wishlist"
                         />
@@ -137,8 +162,7 @@ const dispatch = useDispatch();
                         <AiOutlineHeart
                           size={30}
                           className="cursor-pointer"
-                          onClick={() => setClick(!click)}
-                          //   onClick={() => addToWishlistHandler(data)}
+                          onClick={() => addToWishlistHandler(data)}
                           color={click ? "red" : "#333"}
                           title="Add to wishlist"
                         />

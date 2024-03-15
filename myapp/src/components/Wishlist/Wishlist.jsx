@@ -1,30 +1,22 @@
 import React, { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
-import { BsCartPlus} from "react-icons/bs";
+import { BsCartPlus } from "react-icons/bs";
 import styles from "../../style/styles";
 import { AiOutlineHeart } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { backend_url } from "../../server";
+import { removeFromWishlist } from "../../redux/actions/wishlist";
+import { toast } from "react-toastify";
 
 const Wishlist = ({ setOpenwishlist }) => {
-  const cartData = [
-    {
-      name: "Iphone 14 pro max 256gb and 8gb ran silver colour",
-      description: "test",
-      price: 9999,
-    },
-    {
-      name: "Iphone 14 pro max 256gb and 8gb ran silver colour",
-      description: "test",
-      price: 2589,
-    },
-    {
-      name: "Iphone 14 pro max 256gb and 8gb ran silver colour",
-      description: "test",
-      price: 4569,
-    },
-  ];
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const dispatch = useDispatch()
 
-//   const totalPrice=
+  const removeFromWishlistHandler=(data)=>{
+    dispatch(removeFromWishlist(data))
+  toast.warn("Item removed from wishlist")
 
+  }
 
   return (
     <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
@@ -39,49 +31,59 @@ const Wishlist = ({ setOpenwishlist }) => {
           </div>
           {/* items length */}
           <div className={`${styles.noramlFlex} p-4`}>
-            <AiOutlineHeart size={25} />
-            <h5 className="pl-2 text-[20px] font-[500]">3 items</h5>
+            <AiOutlineHeart size={25} color={wishlist.length===0?"#333":"red"}/>
+            <h5 className="pl-2 text-[20px] font-[500]">{wishlist && wishlist.length} items</h5>
           </div>
           {/* cart Single item */}
           <br />
           <div className="w-full border-t">
-            {cartData &&
-              cartData.map((i, index) => <CartSingle key={index} data={i} />)}
+            {wishlist &&
+              wishlist.map((i, index) => (
+                <WishListSingle
+                  key={index}
+                  data={i}
+                  removeFromWishlistHandler={removeFromWishlistHandler}
+                />
+              ))}
           </div>
         </div>
-       
       </div>
     </div>
   );
 };
 
-const CartSingle = ({ data }) => {
+const WishListSingle = ({ data, removeFromWishlistHandler }) => {
   const [value, setValue] = useState(1);
-  const totalPrice = data.price * value;
+  const totalPrice = data.discountPrice * value;
 
   return (
     <div className="border-b p-4">
       <div className="w-full flex items-center">
-      <RxCross1 className="cursor-pointer 800px:mb-['unset'] 800px:ml-['unset'] mb-2 ml-2"
-        // onClick={() => removeFromWishlistHandler(data)}
+        <RxCross1
+          className="cursor-pointer 800px:mb-['unset'] 800px:ml-['unset'] mb-2 ml-2"
+          onClick={() => removeFromWishlistHandler(data)}
+          size={20}
         />
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvnQmPUmNvPnCSmUvVK5MRdpMZ2UevWVXp8g&usqp=CAU"
+          src={`${backend_url}${data && data.images[0]}`}
           alt="product"
           className="w-[80px] h-[80px] mx-3"
         />
         <div className="pl-[5px]">
-          <h1>{data.name}</h1>
+          <h1>{data.name.length>30? data.name.slice(0,30)+"..." : data.name}</h1>
           <h4 className="font-[400] text-[15px] text-[#00000082]">
-            ${data.price} * {value}
+            ${data.discountPrice} * {value}
           </h4>
           <h4 className="font-[600] text-[17px] pt-[3px] text-[#d02222] font-Roboto">
             US${totalPrice}
           </h4>
         </div>
         <div>
-          <BsCartPlus size={20} className="cursor-pointer" tile="Add to cart"
-        //    onClick={() => addToCartHandler(data)}
+          <BsCartPlus
+            size={20}
+            className="cursor-pointer"
+            tile="Add to cart"
+            //    onClick={() => addToCartHandler(data)}
           />
         </div>
       </div>
@@ -89,5 +91,4 @@ const CartSingle = ({ data }) => {
   );
 };
 
-
-export default Wishlist
+export default Wishlist;

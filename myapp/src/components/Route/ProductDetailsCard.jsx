@@ -9,11 +9,17 @@ import {
 } from "react-icons/ai";
 import { backend_url } from "../../server";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { addTocart } from "../../redux/actions/cart";
 
 const ProductDetailsCard = ({ setOpen, data }) => {
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   // const [select, setSelect] = useState(false);
+  const {cart} = useSelector(state=>state.cart)
+const dispatch = useDispatch();
+
 
   const handleMessageSubmit = () => {};
   const decrementCount = () => {
@@ -25,6 +31,22 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   const incrementCount = () => {
     setCount(count + 1);
   };
+
+  const addToCartHandler=(id)=>{
+    const isItemExist= cart && cart.find((i)=>i._id===id)
+    if(isItemExist){
+      toast.error("Item already exists");
+    }else{
+      if(data.stock<count){
+        toast.error("Product stock limited")
+      }else{
+        const cartData={...data,qty:count}
+      dispatch(addTocart(cartData))
+      toast.success("Item added to cart successfully!")
+      }
+    }
+    
+  }
 
   return (
     <>
@@ -52,7 +74,8 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                         {data.shop.name}
                       </h3>
                       <h5 className="pb-3 text-[15px]">
-                        ({data.shop.ratings})Ratings
+                        {/* ({data.shop.ratings})Ratings */}
+                        (4/5)Ratings
                       </h5>
                     </div>
                   </div>
@@ -76,10 +99,10 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   <p>{data.description}</p>
                   <div className="flex pt-3">
                     <h4 className={`${styles.productDiscountPrice}`}>
-                      {data.discount_price}$
+                      {data.discountPrice}$
                     </h4>
                     <h3 className={`${styles.price}`}>
-                      {data.price ? data.price + "$" : null}
+                      {data.originalPrice ? data.originalPrice + "$" : null}
                     </h3>
                   </div>
                   <div className="flex items-center mt-12 justify-between pr-3">
@@ -124,7 +147,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   </div>
                   <div
                     className={`${styles.button} mt-6 rounded-[4px] h-11 flex items-center`}
-                    // onClick={() => addToCartHandler(data._id)}
+                    onClick={() => addToCartHandler(data._id)}
                   >
                     <span className="text-[#fff] flex items-center">
                       Add to cart <AiOutlineShoppingCart className="ml-1" />

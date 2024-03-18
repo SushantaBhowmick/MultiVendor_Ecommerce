@@ -14,6 +14,7 @@ import { backend_url } from "../../server.js";
 import { useDispatch, useSelector } from "react-redux";
 import { addTowishlist, removeFromWishlist } from "../../redux/actions/wishlist.js";
 import { toast } from "react-toastify";
+import { addTocart } from "../../redux/actions/cart.js";
 
 const ProductCard = ({ data }) => {
   const [click, setClick] = useState(false);
@@ -45,6 +46,23 @@ const ProductCard = ({ data }) => {
     }
   },[wishlist,data._id])
 
+  const {cart} = useSelector(state=>state.cart)
+  const addToCartHandler=(id)=>{
+     const isItemExist= cart && cart.find((i)=>i._id===id)
+     if(isItemExist){
+       toast.error("Item already exists");
+     }else{
+       if(data.stock<1){
+         toast.error("Product stock limited")
+       }else{
+         const cartData={...data,qty:1}
+       dispatch(addTocart(cartData))
+       toast.success("Item added to cart successfully!")
+       }
+     }
+     
+   }
+
   return (
     <>
       <div className="w-full h-[370px] bg-white rounded-lg shaddow-sm p-3 relative cursor-pointer">
@@ -56,7 +74,7 @@ const ProductCard = ({ data }) => {
             className="w-full h-[170px] object-contain"
           />
         </Link>
-        <Link to={`/`}>
+        <Link  to={`/shop/preview/${data.shop._id}`} >
           <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>
         </Link>
         <Link to={`/product/${data._id}`}>
@@ -118,7 +136,7 @@ const ProductCard = ({ data }) => {
             <AiOutlineShoppingCart
                 size={25}
                 className="cursor-pointer absolute right-2 top-24"
-                // onClick={()=>setOpen(!open)}
+                onClick={()=>addToCartHandler(data._id)}
                 color={"#444"}
                 title="Add to cart"
               />

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { backend_url } from "../../server";
 import { removeFromWishlist } from "../../redux/actions/wishlist";
 import { toast } from "react-toastify";
+import { addTocart } from "../../redux/actions/cart";
 
 const Wishlist = ({ setOpenwishlist }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -18,9 +19,40 @@ const Wishlist = ({ setOpenwishlist }) => {
 
   }
 
+  const {cart} = useSelector(state=>state.cart)
+  const addToCartHandler=(data)=>{
+     const isItemExist= cart && cart.find((i)=>i._id===data._id)
+     if(isItemExist){
+       toast.error("Item already exists");
+     }else{
+       if(data.stock<1){
+         toast.error("Product stock limited")
+       }else{
+         const cartData={...data,qty:1}
+       dispatch(addTocart(cartData))
+       setOpenwishlist(false)
+       toast.success("Item added to cart successfully!")
+       }
+     }
+     
+   }
+
+
   return (
     <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
       <div className="fixed right-0 top-0 min-h-full w-[25%] bg-white flex flex-col justify-between ">
+      {wishlist && wishlist.length === 0 ? (
+          <div className="w-full h-screen flex items-center justify-center">
+            <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
+              <RxCross1
+                size={25}
+                className="cursor-pointer"
+                onClick={() => setOpenwishlist(false)}
+              />
+            </div>
+            <h5>Wishlist Items is empty!</h5>
+          </div>
+        ) :(
         <div>
           <div className="flex w-full justify-end pt-5 pr-5 ">
             <RxCross1
@@ -43,18 +75,21 @@ const Wishlist = ({ setOpenwishlist }) => {
                   key={index}
                   data={i}
                   removeFromWishlistHandler={removeFromWishlistHandler}
+                  addToCartHandler={addToCartHandler}
                 />
               ))}
           </div>
         </div>
+        )}
       </div>
     </div>
   );
 };
 
-const WishListSingle = ({ data, removeFromWishlistHandler }) => {
+const WishListSingle = ({ data, removeFromWishlistHandler,addToCartHandler }) => {
   const [value, setValue] = useState(1);
   const totalPrice = data.discountPrice * value;
+
 
   return (
     <div className="border-b p-4">
@@ -83,7 +118,7 @@ const WishListSingle = ({ data, removeFromWishlistHandler }) => {
             size={20}
             className="cursor-pointer"
             tile="Add to cart"
-            //    onClick={() => addToCartHandler(data)}
+               onClick={() => addToCartHandler(data)}
           />
         </div>
       </div>

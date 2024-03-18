@@ -16,6 +16,7 @@ export const createProduct = (newForm) => async (dispatch) => {
     const {data} = await axios.post(
       `${server}/product/create-product`,
       newForm,
+      {withCredentials:true},
       config
     );
 

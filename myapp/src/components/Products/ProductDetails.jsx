@@ -10,6 +10,9 @@ import {
 import { backend_url } from "../../server";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsShop } from "../../redux/actions/product";
+import { toast } from "react-toastify";
+import { addTocart } from "../../redux/actions/cart";
+import { addTowishlist, removeFromWishlist } from "../../redux/actions/wishlist";
 
 const ProductDetails = ({ data }) => {
   const [count, setCount] = useState(1);
@@ -18,6 +21,7 @@ const ProductDetails = ({ data }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { products } = useSelector((state) => state.product);
+  const {cart} = useSelector(state=>state.cart)
 
 
   useEffect(() => {
@@ -37,6 +41,38 @@ const ProductDetails = ({ data }) => {
   const handleMessageSubmit = () => {
     navigate("/index?conversion=jf9soeur934ueu");
   };
+
+  const addToCartHandler=(id)=>{
+    const isItemExist= cart && cart.find((i)=>i._id===id)
+    if(isItemExist){
+      toast.error("Item already exists");
+    }else{
+      if(data.stock<count){
+        toast.error("Product stock limited")
+      }else{
+        const cartData={...data,qty:count}
+      dispatch(addTocart(cartData))
+      toast.success("Item added to cart successfully!")
+      }
+    }
+  }
+
+  const {wishlist} = useSelector(state=>state.wishlist)
+  
+  const removeFromWishlistHandler=(data)=>{
+    setClick(!click)
+    dispatch(removeFromWishlist(data))
+    toast.warn("Item removed from wishlist")
+  }
+  const addToWishlistHandler=(data)=>{
+    if(wishlist.length>4){
+      toast.error("Your wishlist limit has exceed")
+    }else{
+      setClick(!click)
+      dispatch(addTowishlist(data))
+      toast.success("Item added to wishlist")
+    }
+  }
 
   return (
     <>
@@ -107,10 +143,10 @@ const ProductDetails = ({ data }) => {
                   <p className="">{data.description}</p>
                   <div className="flex pt-3">
                     <h4 className={`${styles.productDiscountPrice}`}>
-                      {data.discount_price}$
+                      {data.discountPrice}$
                     </h4>
                     <h3 className={`${styles.price}`}>
-                      {data.price ? data.price + "$" : null}
+                      {data.originalPrice ? data.originalPrice + "$" : null}
                     </h3>
                   </div>
                   <div className="flex items-center mt-12 justify-between pr-3">
@@ -136,8 +172,7 @@ const ProductDetails = ({ data }) => {
                         <AiFillHeart
                           size={30}
                           className="cursor-pointer"
-                          // onClick={() => removeFromWishlistHandler(data)}
-                          onClick={() => setClick(!click)}
+                          onClick={() => removeFromWishlistHandler(data)}
                           color={click ? "red" : "#333"}
                           title="Remove from wishlist"
                         />
@@ -145,8 +180,7 @@ const ProductDetails = ({ data }) => {
                         <AiOutlineHeart
                           size={30}
                           className="cursor-pointer"
-                          onClick={() => setClick(!click)}
-                          //   onClick={() => addToWishlistHandler(data)}
+                          onClick={() => addToWishlistHandler(data)}
                           color={click ? "red" : "#333"}
                           title="Add to wishlist"
                         />
@@ -155,6 +189,7 @@ const ProductDetails = ({ data }) => {
                   </div>
                   <div
                     className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
+                    onClick={()=>addToCartHandler(data._id)}
                   >
                     <span className="text-white flex items-center">
                       Add to cart <AiOutlineShoppingCart />
@@ -261,7 +296,8 @@ const ProductDetailsInfo = ({ data,products }) => {
       {active === 3 && (
         <div className="w-full block 800px:flex p-5">
           <div className="w-full 800px:w-[50%]">
-            <div className="flex items-center">
+           <Link to={`/shop/preview/${data.shop._id}`} >
+           <div className="flex items-center">
               <img
                 src={`${backend_url}${data.shop && data.shop.avatar}`}
                 className="w-[50px] h-[50px] rounded-full"
@@ -275,6 +311,7 @@ const ProductDetailsInfo = ({ data,products }) => {
                 </h5>
               </div>
             </div>
+           </Link>
               <p className="pt-2">
                {data.shop.description}
               </p>

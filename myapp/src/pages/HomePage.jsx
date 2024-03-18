@@ -9,8 +9,9 @@ import Sponsored from "../components/Route/Sponsored.jsx";
 import Footer from "../components/Layout/Footer.jsx";
 
 const HomePage = () => {
+
   return (
-    <div>
+    <div >
       <Header activeHeading={1} />
       <Hero />
       <Categories />

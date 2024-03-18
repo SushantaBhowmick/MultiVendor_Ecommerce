@@ -28,7 +28,7 @@ const Cart = ({ setOpenCart }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
+    <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10 ">
       <div className="fixed right-0 top-0 min-h-full w-[25%]  bg-white flex flex-col justify-between ">
       {cart && cart.length === 0 ? (
           <div className="w-full h-screen flex items-center justify-center">
@@ -61,7 +61,7 @@ const Cart = ({ setOpenCart }) => {
 
               {/* cart Single Items */}
               <br />
-              <div className="w-full border-t">
+              <div className="w-full border-t h-[80vh] overflow-y-auto">
                 {cart &&
                   cart.map((i, index) => (
                     <CartSingle

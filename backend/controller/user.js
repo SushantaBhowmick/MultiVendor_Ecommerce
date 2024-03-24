@@ -227,3 +227,25 @@ exports.updateUseraddress = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler(error.message, 500));
   }
 });
+//delete User addresses
+exports.deleteUseraddress = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const addressId = req.params.id;
+
+    await User.updateOne({
+      _id:userId,
+    },{$pull:{addresses:{_id:addressId}}}) 
+
+    const user = await User.findById(userId)
+
+    res.status(200).json({
+      success: true,
+      message: "Address deleted successfully!",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorHandler(error.message, 500));
+  }
+});

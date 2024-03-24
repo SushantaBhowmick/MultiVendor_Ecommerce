@@ -11,7 +11,7 @@ import styles from "../../style/styles";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@material-ui/data-grid";
 import { MdOutlineTrackChanges } from "react-icons/md";
-import { updateUserAddress, updateUserInfo } from "../../redux/actions/user";
+import { deleteUserAddress, updateUserAddress, updateUserInfo } from "../../redux/actions/user";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { RxCross1 } from "react-icons/rx";
@@ -518,6 +518,10 @@ const Address = () => {
       setAddressType("");
     }
   };
+  const handleDelete=(item)=>{
+    dispatch(deleteUserAddress(item._id))
+    // console.log(item._id)
+  }
 
   return (
     <div className="w-full px-5">
@@ -683,7 +687,7 @@ const Address = () => {
           <h6>{user && user.phoneNumber}</h6>
         </div>
         <div className="flex items-center justify-between pl-8">
-          <AiOutlineDelete size={25} className="cursor-pointer" color="red" />
+          <AiOutlineDelete size={25} className="cursor-pointer" color="red" onClick={()=>handleDelete(item)} />
         </div>
       </div>
       ))

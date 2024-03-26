@@ -11,7 +11,11 @@ import styles from "../../style/styles";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@material-ui/data-grid";
 import { MdOutlineTrackChanges } from "react-icons/md";
-import { deleteUserAddress, updateUserAddress, updateUserInfo } from "../../redux/actions/user";
+import {
+  deleteUserAddress,
+  updateUserAddress,
+  updateUserInfo,
+} from "../../redux/actions/user";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { RxCross1 } from "react-icons/rx";
@@ -167,13 +171,13 @@ const ProfileContnet = ({ active, setActive }) => {
           <TrackOrder />
         </div>
       )}
-      {/* Payment Method */}
+      {/* Change Password */}
       {active === 6 && (
         <div>
-          <PaymentMethod />
+          <ChangePassword />
         </div>
       )}
-      {/* Payment Method  */}
+      {/*Address */}
       {active === 7 && (
         <div>
           <Address />
@@ -439,34 +443,74 @@ const TrackOrder = () => {
   );
 };
 
-const PaymentMethod = () => {
+const ChangePassword = () => {
+  const [oldPasswrd, setOldPassword] = useState("");
+  const [newPasswrd, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const passwordChangeHandler = async(e) => {
+    e.preventDefault();
+    axios.put(`${server}/user/update-user-password`,
+    {oldPasswrd,newPasswrd,confirmPassword},
+    {withCredentials:true})
+    .then((res)=>{
+      toast.success(res.data.message)
+      setOldPassword("")
+      setNewPassword("")
+      setConfirmPassword("")
+    }).catch((err)=>{
+      toast.error(err.response.data.message)
+    })
+
+  };
+
   return (
     <div className="w-full px-5">
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center justify-center">
         <h1 className="text-[25px] font-[600] text-[#000000ba]">
-          Payment Methods
+          Change Password
         </h1>
-        <div className={`${styles.button} !rounded-md`}>
-          <span className="text-[#fff]">Add New</span>
-        </div>
       </div>
-      <br />
-      <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10">
-        <div className="flex items-center">
-          <img
-            src="https://bonik-react.vercel.app/assets/images/payment-methods/Visa.svg"
-            alt="visa card"
-          />
-          <h5 className="font-[600] pl-5">Sushanta Bhowmick</h5>
+      <form action="" onSubmit={passwordChangeHandler}>
+        <div className="w-full 800px:flex block pb-3 flex-col items-center">
+          <div className="w-[100%] 800px:w-[50%] mt-10">
+            <label className="blcok pb-2">Enter your old password</label>
+            <input
+              type="password"
+              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              required
+              value={oldPasswrd}
+              onChange={(e) => setOldPassword(e.target.value)}
+            />
+          </div>
+          <div className="w-[100%] 800px:w-[50%] mt-3">
+            <label className="blcok pb-2">Enter your new password</label>
+            <input
+              type="password"
+              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              required
+              value={newPasswrd}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
+          <div className="w-[100%] 800px:w-[50%] mt-3">
+            <label className="blcok pb-2">Enter your confirm password</label>
+            <input
+              type="password"
+              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <button
+              className={`${styles.button} text-white mt-5 !rounded-md !w-[95%]`}
+              type="submit"
+            >
+              Update
+            </button>
+          </div>
         </div>
-        <div className="flex pl-8 items-center">
-          <h6>123 **** *** ****</h6>
-          <h5 className="pl-6">08/2024</h5>
-        </div>
-        <div className="flex items-center justify-between pl-8">
-          <AiOutlineDelete size={25} className="cursor-pointer" color="red" />
-        </div>
-      </div>
+      </form>
     </div>
   );
 };
@@ -479,7 +523,7 @@ const Address = () => {
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
   const [addressType, setAddressType] = useState("");
-  const { user} = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const addressTypeData = [
@@ -518,10 +562,10 @@ const Address = () => {
       setAddressType("");
     }
   };
-  const handleDelete=(item)=>{
-    dispatch(deleteUserAddress(item._id))
+  const handleDelete = (item) => {
+    dispatch(deleteUserAddress(item._id));
     // console.log(item._id)
-  }
+  };
 
   return (
     <div className="w-full px-5">
@@ -674,25 +718,34 @@ const Address = () => {
         </div>
       </div>
       <br />
-    {
-      user && user.addresses.map((item,i)=>(
-        <div key={i} className="w-full mb-5 bg-white h-min 800px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10">
-        <div className="flex items-center">
-          <h5 className="font-[600] pl-5">{item.addressType}</h5>
-        </div>
-        <div className="flex pl-8 items-center">
-          <h6>{item.address1}, {item.address2}</h6>
-        </div>
-        <div className="flex pl-8 items-center">
-          <h6>{user && user.phoneNumber}</h6>
-        </div>
-        <div className="flex items-center justify-between pl-8">
-          <AiOutlineDelete size={25} className="cursor-pointer" color="red" onClick={()=>handleDelete(item)} />
-        </div>
-      </div>
-      ))
-    }
-     {user && user.addresses.length === 0 && (
+      {user &&
+        user.addresses.map((item, i) => (
+          <div
+            key={i}
+            className="w-full mb-5 bg-white h-min 800px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10"
+          >
+            <div className="flex items-center">
+              <h5 className="font-[600] pl-5">{item.addressType}</h5>
+            </div>
+            <div className="flex pl-8 items-center">
+              <h6>
+                {item.address1}, {item.address2}
+              </h6>
+            </div>
+            <div className="flex pl-8 items-center">
+              <h6>{user && user.phoneNumber}</h6>
+            </div>
+            <div className="flex items-center justify-between pl-8">
+              <AiOutlineDelete
+                size={25}
+                className="cursor-pointer"
+                color="red"
+                onClick={() => handleDelete(item)}
+              />
+            </div>
+          </div>
+        ))}
+      {user && user.addresses.length === 0 && (
         <h5 className="text-center pt-8 text-[18px]">
           You not have any saved address!
         </h5>

@@ -55,4 +55,20 @@ exports.deleteCouponByShop = catchAsyncErrors(async (req, res, next) => {
       return next(new ErrorHandler(error.message, 400));
     }
   });
+
+//get Coupoun code
+exports.getCouponCode = catchAsyncErrors(async (req, res, next) => {
+    try {
+        
+      const couponCode = await CoupounCode.findOne({name:req.params.name})
+      
+      res.status(200).json({
+        success: true,
+        message:"Coupon code applied successfully !",
+        couponCode
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  });
   

@@ -10,7 +10,8 @@ const {
     updateUserInfo,
     updateUserAvatar,
     updateUseraddress,
-    deleteUseraddress
+    deleteUseraddress,
+    updateUserPassword
 } = require('../controller/user');
 const { isAuthenticated } = require('../middleware/auth');
 
@@ -24,6 +25,7 @@ router.route("/update-user-info").put(isAuthenticated,updateUserInfo);
 router.route("/update-user-avatar").put(isAuthenticated,upload.single("image"), updateUserAvatar);
 router.route("/update-user-addresses").put(isAuthenticated, updateUseraddress);
 router.route("/delete-user-address/:id").delete(isAuthenticated, deleteUseraddress);
+router.route("/update-user-password").put(isAuthenticated, updateUserPassword);
 
 
 module.exports = router;

@@ -249,3 +249,32 @@ exports.deleteUseraddress = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler(error.message, 500));
   }
 });
+//update User password
+exports.updateUserPassword = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const {oldPasswrd,newPasswrd,confirmPassword} = req.body;
+    if(!oldPasswrd || !newPasswrd || !confirmPassword){
+      return next(new ErrorHandler("Enter all fields",400))
+    }
+    const userId = req.user.id;
+    const user = await User.findById(userId).select("+password");
+
+    const isMatch = await user.comparePassword(oldPasswrd);
+    if(!isMatch) {
+      return next(new ErrorHandler("Incorrect old password", 400));
+    }
+    if(newPasswrd !== confirmPassword){
+      return next(new ErrorHandler("Password doesn't match with wach other!", 400));
+    }
+    user.password = confirmPassword;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Update password successfully!",
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorHandler(error.message, 500));
+  }
+});

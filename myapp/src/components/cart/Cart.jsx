@@ -80,7 +80,7 @@ const Cart = ({ setOpenCart }) => {
                 <div
                   className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]`}
                 >
-                  <h1 className="text-[#fff] text-[18px] font-[600]">
+                  <h1 className="text-[#fff] 800px:text-[18px]  font-[600] text-center ">
                     Checkout Now (USD${totalPrice})
                   </h1>
                 </div>

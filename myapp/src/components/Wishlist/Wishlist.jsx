@@ -105,7 +105,7 @@ const WishListSingle = ({ data, removeFromWishlistHandler,addToCartHandler }) =>
           className="w-[80px] h-[80px] mx-3"
         />
         <div className="pl-[5px]">
-          <h1>{data.name.length>30? data.name.slice(0,30)+"..." : data.name}</h1>
+          <h1>{data.name.length>30? data.name.slice(0,40)+"..." : data.name}</h1>
           <h4 className="font-[400] text-[15px] text-[#00000082]">
             ${data.discountPrice} * {value}
           </h4>

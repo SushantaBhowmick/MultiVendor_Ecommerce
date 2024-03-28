@@ -26,7 +26,30 @@ const Checkout = () => {
   // })
 
   const paymentSubmit = (e) => {
-    navigate("/payment");
+    if(address1 === "" || address2 === "" || zipCode === null || country === "" || city === ""){
+      toast.error("Please choose your delivery address!")
+   }else{
+    const shippingAddress={
+      address1,
+      address2,
+      zipCode,
+      country,
+      city,
+    }
+    const orderData = {
+      cart,
+      totalPrice,
+      subTotalPrice,
+      shipping,
+      discountPrice,
+      shippingAddress,
+      user
+    }
+
+    //update local storage 
+    localStorage.setItem("latestOrder",JSON.stringify(orderData));
+    navigate("/payment")
+   }
   };
 
   const subTotalPrice = cart.reduce(

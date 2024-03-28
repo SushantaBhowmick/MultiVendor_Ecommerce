@@ -111,6 +111,7 @@ const CartSingle = ({ data, qtyChangeHandler, removeFromCartHadler }) => {
     qtyChangeHandler(updateCartData)
 
   };
+  console.log(data.name.length)
 
   return (
     <div className="border-b p-4">
@@ -136,7 +137,9 @@ const CartSingle = ({ data, qtyChangeHandler, removeFromCartHadler }) => {
           className="w-[80px] h-min ml-2 mr-2 rounded-[5px]"
         />
         <div className="pl-[5px]">
-          <h1>{data.name}</h1>
+          <h1>{
+          data.name.length > 40 ? data.name.slice(0,40)+ "..." : data.name
+          }</h1>
           <h4 className="font-[400] text-[15px] text-[#00000082]">
             ${data.discountPrice} * {value}
           </h4>

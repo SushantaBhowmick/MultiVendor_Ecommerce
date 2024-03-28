@@ -14,7 +14,8 @@ import {
   ShopCreatePage,
   SellerActivationPage,
   ShopLoginPage,
-  CheckoutPage
+  CheckoutPage,
+  PaymentPage,
 } from "./routes/Routes.js";
 import {
   ShopHomePage,
@@ -24,11 +25,11 @@ import {
   ShopCreateEvents,
   ShopAllEvents,
   ShopAllCoupouns,
-  ShopPreviewPage
+  ShopPreviewPage,
 } from "./routes/ShopRoutes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { loadUser } from "./redux/actions/user.js";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute.js";
@@ -36,9 +37,13 @@ import { loadSeller } from "./redux/actions/seller.js";
 import SellerProtectedRoute from "./protectedRoutes/SellerProtectedRoute.js";
 import { getAllProducts } from "./redux/actions/product.js";
 import { getAllevents } from "./redux/actions/event.js";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
 
 function App() {
   const dispatch = useDispatch();
+  const [stripeApikey, setStripeApiKey] = useState("");
 
   useEffect(() => {
     dispatch(loadUser());
@@ -50,6 +55,23 @@ function App() {
   return (
     <>
       <Router>
+       {/* {
+        stripeApikey && ( */}
+          <Elements stripe={loadStripe(stripeApikey)}>
+          <Routes>
+            <Route
+              path="/payment"
+              element={
+                <ProtectedRoute>
+                  <PaymentPage />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Elements>
+        {/* )
+       } */}
+
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -141,11 +163,10 @@ function App() {
             path="/dashboard-coupouns"
             element={
               <SellerProtectedRoute>
-                <ShopAllCoupouns/>
+                <ShopAllCoupouns />
               </SellerProtectedRoute>
             }
           />
-
         </Routes>
 
         <ToastContainer

@@ -16,6 +16,7 @@ import {
   ShopLoginPage,
   CheckoutPage,
   PaymentPage,
+  OrderSuccessPage
 } from "./routes/Routes.js";
 import {
   ShopHomePage,
@@ -39,38 +40,43 @@ import { getAllProducts } from "./redux/actions/product.js";
 import { getAllevents } from "./redux/actions/event.js";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-
+import axios from "axios";
+import { server } from "./server.js";
 
 function App() {
   const dispatch = useDispatch();
   const [stripeApikey, setStripeApiKey] = useState("");
+
+  async function getStripeApiKey() {
+    const { data } = await axios.get(`${server}/payment/stripeapikey`);
+    setStripeApiKey(data.stripeApiKey);
+  }
 
   useEffect(() => {
     dispatch(loadUser());
     dispatch(loadSeller());
     dispatch(getAllProducts());
     dispatch(getAllevents());
+    getStripeApiKey();
   }, [dispatch]);
 
   return (
     <>
       <Router>
-       {/* {
-        stripeApikey && ( */}
+        {stripeApikey && (
           <Elements stripe={loadStripe(stripeApikey)}>
-          <Routes>
-            <Route
-              path="/payment"
-              element={
-                <ProtectedRoute>
-                  <PaymentPage />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </Elements>
-        {/* )
-       } */}
+            <Routes>
+              <Route
+                path="/payment"
+                element={
+                  <ProtectedRoute>
+                    <PaymentPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </Elements>
+        )}
 
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -108,6 +114,7 @@ function App() {
           />
 
           <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
+          <Route path="/order/success" element={<OrderSuccessPage />} />
           {/* shop routes */}
           <Route path="/shop-create" element={<ShopCreatePage />} />
           <Route path="/shop-login" element={<ShopLoginPage />} />

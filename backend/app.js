@@ -35,13 +35,17 @@ const userRoute = require('./routes/user')
 const shopRoute = require('./routes/shop')
 const prodRoute = require('./routes/product')
 const eventRoute = require('./routes/event')
-const couponRoute = require('./routes//coupounCode')
+const couponRoute = require('./routes/coupounCode')
+const payment = require('./routes/payment')
+const order = require('./routes/order')
 
 app.use("/api/v2/user",userRoute)
 app.use("/api/v2/seller",shopRoute)
 app.use("/api/v2/product",prodRoute)
 app.use("/api/v2/event",eventRoute)
 app.use("/api/v2/coupon",couponRoute)
+app.use("/api/v2/payment",payment)
+app.use("/api/v2/order",order)
 
 
 //its for ErrorHandler

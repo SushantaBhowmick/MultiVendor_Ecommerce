@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "../../style/styles";
 import { Link } from "react-router-dom";
-import { categoriesData, productData } from "../../static/data";
+import { categoriesData } from "../../static/data";
 import {
   AiOutlineHeart,
   AiOutlineSearch,
@@ -84,7 +84,7 @@ const Header = ({ activeHeading }) => {
                 {searchData &&
                   searchData.map((i, index) => {
                     return (
-                      <Link to={`/product/${i._id}`}>
+                      <Link to={`/product/${i._id}`} onClick={()=>setSearchData(null)} >
                         <div className="w-full flex items-start py-3">
                           <img
                             src={`${backend_url}${i.images[0]}`}
@@ -271,7 +271,7 @@ const Header = ({ activeHeading }) => {
                     {searchData.map((i) => {
 
                       return (
-                        <Link to={`/product/${i._id}`}>
+                        <Link to={`/product/${i._id}`} >
                           <div className="flex items-center">
                             <img
                               // src={i.image_Url[0]?.url}

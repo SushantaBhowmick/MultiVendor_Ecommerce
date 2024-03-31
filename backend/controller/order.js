@@ -31,6 +31,7 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
 
     });
   } catch (error) {
+    console.log(error)
     return next(new ErrorHandler(error.message, 400));
   }
 });

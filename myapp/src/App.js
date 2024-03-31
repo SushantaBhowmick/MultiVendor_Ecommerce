@@ -92,6 +92,7 @@ function App() {
           />
           <Route path="/products" element={<ProductPage />} />
           <Route path="/product/:id" element={<ProductDetailsPage />} />
+          {/* <Route path="/event/:id" element={<EventDetailsPage />} /> */}
           <Route path="/best-selling" element={<BestSellingPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/faq" element={<FAQPage />} />

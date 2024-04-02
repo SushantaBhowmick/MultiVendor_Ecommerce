@@ -57,7 +57,7 @@ const Checkout = () => {
     0
   );
 
-  const shipping = subTotalPrice * 0.001;
+  const shipping = subTotalPrice * 0.01;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

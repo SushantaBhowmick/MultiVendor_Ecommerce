@@ -23,25 +23,6 @@ const Payment = () => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const createOrder = (data,actions) => {
-    return actions.order.create({
-      purchase_units:[
-        {
-          description:"Sunflower",
-          amount:{
-            currency_code:"USD",
-            value:orderData?.totalPrice
-          }
-        }
-      ],
-      application_context:{
-        shipping_preference:"NO_SHIPPING",
-      },
-    }).then((orderID)=>{
-      return orderID;
-    })
-  };
-
   const paymentData = {
     amount: Math.round(orderData?.totalPrice * 100),
   };
@@ -54,8 +35,8 @@ const Payment = () => {
 
   const paymentHandler = async (e) => {
     e.preventDefault();
-   try {
-    const config = {
+    try {
+      const config = {
         headers: {
           Content_Type: "application/json",
         },
@@ -81,74 +62,101 @@ const Payment = () => {
             status: result.paymentIntent.status,
             type: "Credit Card",
           };
-          await axios.post(
-            `${server}/order/create-order`,
-            order,
-            { withCredentials: true },
-            config
-          ).then((res)=>{
-              setOpen(false)
+          await axios
+            .post(
+              `${server}/order/create-order`,
+              order,
+              { withCredentials: true },
+              config
+            )
+            .then((res) => {
+              setOpen(false);
               navigate("/order/success");
               toast.success("Order successfully");
-              localStorage.setItem("cartItems",JSON.stringify([]))
-              localStorage.setItem("latestOrder",JSON.stringify([]))
-              window.location.reload()
-          }).catch((err)=>{
-              toast.error(err)
-              console.log(err)
-          });
+              localStorage.setItem("cartItems", JSON.stringify([]));
+              localStorage.setItem("latestOrder", JSON.stringify([]));
+              window.location.reload();
+            })
+            .catch((err) => {
+              toast.error(err);
+              console.log(err);
+            });
         }
       }
-   } catch (error) {
-    toast.error(error);
-   }
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   const cashOnDeliveryHandler = () => {};
 
-  const onApprove = (data,actions) => {
-    console.log(data)
-    console.log(actions)
-    return actions.order.capture().then(function(details){
-      const {payer} = details;
-      let paymentInfo = payer;
-      if(paymentInfo !==undefined){
-        paypalPaymentHandler(paymentInfo)
-      }
-    })
+  const createOrder = (data, actions) => {
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            description: "Sunflower",
+            amount: {
+              currency_code: "USD",
+              value: orderData?.totalPrice,
+            },
+          },
+        ],
+         // not needed if a shipping address is actually needed
+         application_context: {
+          shipping_preference: "NO_SHIPPING",
+        },
+      })
+      .then((orderID) => {
+        console.log("orderID", orderID);
+        return orderID;
+      });
   };
 
-  const paypalPaymentHandler = async(paymentInfo) => {
-      const config = {
-        headers: {
-          Content_Type: "application/json",
-        },
-      };
-
-      order.paymentInfo={
-        id:paymentInfo.payer_id,
-        status:"succeeded",
-        type:"Paypal"
+  const onApprove = (data, actions) => {
+    return actions.order.capture().then(function (details) {
+      const { payer } = details;
+      let paymentInfo = payer;
+      console.log(paymentInfo);
+      if (paymentInfo !== undefined) {
+        paypalPaymentHandler(paymentInfo);
       }
+    });
+  };
 
-      await axios.post(
+  const paypalPaymentHandler = async (paymentInfo) => {
+    const config = {
+      headers: {
+        Content_Type: "application/json",
+      },
+    };
+
+    order.paymentInfo = {
+      id: paymentInfo.payer_id,
+      status: "succeeded",
+      type: "Paypal",
+    };
+
+    await axios
+      .post(
         `${server}/order/create-order`,
         order,
         { withCredentials: true },
         config
-      ).then((res)=>{
-          setOpen(false)
-          navigate("/order/success");
-          toast.success("Order successfully");
-          localStorage.setItem("cartItems",JSON.stringify([]))
-          localStorage.setItem("latestOrder",JSON.stringify([]))
-          window.location.reload()
-      })
+      )
+      .then((res) => {
+        setOpen(false);
+        navigate("/order/success");
+        toast.success("Order successfully");
+        localStorage.setItem("cartItems", JSON.stringify([]));
+        localStorage.setItem("latestOrder", JSON.stringify([]));
+        window.location.reload();
+      });
   };
 
   useEffect(() => {
-    const orderData = JSON.parse(localStorage.getItem("latestOrder"));
-    setOrderData(orderData);
+    const orderD = JSON.parse(localStorage.getItem("latestOrder"));
+    setOrderData(orderD);
   }, []);
 
   return (
@@ -183,6 +191,12 @@ const PaymentInfo = ({
   cashOnDeliveryHandler,
 }) => {
   const [select, setSelect] = useState(0);
+  const initialOptions = {
+    clientId:
+      "ARMSpYqxZUxt3Wm0LwYWqQH9yQLr2wmDT1UQ4o-Hkr_6xTbAjiI1IoiCQlWFkONp_Fwzx1PRlcK7GK1U",
+    currency: "USD",
+    intent: "capture",
+  };
 
   return (
     <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-5 pb-8">
@@ -201,7 +215,7 @@ const PaymentInfo = ({
             Pay with Debit/credit card
           </h4>
         </div>
-{/* pay with cards */}
+        {/* pay with cards */}
         {select === 1 && (
           <div className="w-full flex border-b">
             <form action="" className="w-full" onSubmit={paymentHandler}>
@@ -333,15 +347,15 @@ const PaymentInfo = ({
                     />
                   </div>
                   <PayPalScriptProvider
-                   options={{
-                    "client-id":
-                      "Aczac4Ry9_QA1t4c7TKH9UusH3RTe6onyICPoCToHG10kjlNdI-qwobbW9JAHzaRQwFMn2-k660853jn",
-                  }}
-                   >
+                    options={{
+                      "clientId":
+                      "ARMSpYqxZUxt3Wm0LwYWqQH9yQLr2wmDT1UQ4o-Hkr_6xTbAjiI1IoiCQlWFkONp_Fwzx1PRlcK7GK1U"
+                      }}
+                  >
                     <PayPalButtons
                       style={{ layout: "vertical" }}
-                      onApprove={onApprove}
                       createOrder={createOrder}
+                      onApprove={onApprove}
                     />
                   </PayPalScriptProvider>
                 </div>

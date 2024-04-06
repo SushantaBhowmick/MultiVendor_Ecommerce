@@ -38,7 +38,7 @@ const Payment = () => {
     try {
       const config = {
         headers: {
-          Content_Type: "application/json",
+          "Content-Type": "application/json",
         },
       };
       const { data } = await axios.post(
@@ -57,7 +57,7 @@ const Payment = () => {
         toast.error(result.error.message);
       } else {
         if (result.paymentIntent.status === "succeeded") {
-          order.PaymentInfo = {
+          order.paymentInfo = {
             id: result.paymentIntent.id,
             status: result.paymentIntent.status,
             type: "Credit Card",
@@ -88,7 +88,39 @@ const Payment = () => {
     }
   };
 
-  const cashOnDeliveryHandler = () => {};
+  const cashOnDeliveryHandler = async(e) => {
+    e.preventDefault();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    order.paymentInfo = {
+      type: "Cash On Delivery",
+    };
+
+    await axios
+    .post(
+      `${server}/order/create-order`,
+      order,
+      { withCredentials: true },
+      config
+    )
+    .then((res) => {
+      setOpen(false);
+      navigate("/order/success");
+      toast.success("Order successfully");
+      localStorage.setItem("cartItems", JSON.stringify([]));
+      localStorage.setItem("latestOrder", JSON.stringify([]));
+      window.location.reload();
+    })
+    .catch((err) => {
+      toast.error(err);
+      console.log(err);
+    });
+  };
 
   const createOrder = (data, actions) => {
     return actions.order
@@ -127,7 +159,7 @@ const Payment = () => {
   const paypalPaymentHandler = async (paymentInfo) => {
     const config = {
       headers: {
-        Content_Type: "application/json",
+        "Content-Type": "application/json",
       },
     };
 
@@ -191,12 +223,12 @@ const PaymentInfo = ({
   cashOnDeliveryHandler,
 }) => {
   const [select, setSelect] = useState(0);
-  const initialOptions = {
-    clientId:
-      "ARMSpYqxZUxt3Wm0LwYWqQH9yQLr2wmDT1UQ4o-Hkr_6xTbAjiI1IoiCQlWFkONp_Fwzx1PRlcK7GK1U",
-    currency: "USD",
-    intent: "capture",
-  };
+  // const initialOptions = {
+  //   clientId:
+  //     "ARMSpYqxZUxt3Wm0LwYWqQH9yQLr2wmDT1UQ4o-Hkr_6xTbAjiI1IoiCQlWFkONp_Fwzx1PRlcK7GK1U",
+  //   currency: "USD",
+  //   intent: "capture",
+  // };
 
   return (
     <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-5 pb-8">
@@ -385,7 +417,7 @@ const PaymentInfo = ({
         {/* Cash on delivery */}
         {select === 3 && (
           <div className=" w-full flex">
-            <form action="" className=" w-full">
+            <form action="" className=" w-full" onSubmit={cashOnDeliveryHandler}>
               <input
                 type="submit"
                 value={"Confirm"}

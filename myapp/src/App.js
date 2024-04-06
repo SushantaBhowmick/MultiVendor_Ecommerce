@@ -16,7 +16,8 @@ import {
   ShopLoginPage,
   CheckoutPage,
   PaymentPage,
-  OrderSuccessPage
+  OrderSuccessPage,
+  OrderDetailsPage
 } from "./routes/Routes.js";
 import {
   ShopHomePage,
@@ -102,6 +103,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user/order/:id"
+            element={
+              <ProtectedRoute>
+                <OrderDetailsPage />
               </ProtectedRoute>
             }
           />

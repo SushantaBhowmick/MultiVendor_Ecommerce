@@ -28,7 +28,9 @@ const orderSchema = new mongoose.Schema({
     status:{
         type:String,
     },
-    type:String,
+    type:{
+      type:String
+    },
  },
   paidAt: {
     type: Date,

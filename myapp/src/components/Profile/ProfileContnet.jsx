@@ -20,9 +20,11 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { RxCross1 } from "react-icons/rx";
 import { Country, State } from "country-state-city";
+import { getAllOrders } from "../../redux/actions/order";
 
 const ProfileContnet = ({ active, setActive }) => {
   const { user, error, message } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.orders);
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
@@ -31,6 +33,7 @@ const ProfileContnet = ({ active, setActive }) => {
   console.log(avatar);
   const dispatch = useDispatch();
 
+  console.log(orders)
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateUserInfo(name, email, phoneNumber, password));
@@ -66,7 +69,8 @@ const ProfileContnet = ({ active, setActive }) => {
       toast.success(message);
       dispatch({ type: "clearMessages" });
     }
-  }, [error, dispatch, message]);
+    dispatch(getAllOrders(user._id))
+  }, [error, dispatch, message,user._id]);
 
   return (
     <div className="w-full">
@@ -156,7 +160,7 @@ const ProfileContnet = ({ active, setActive }) => {
       {/* order  */}
       {active === 2 && (
         <div>
-          <AllOrders />
+          <AllOrders orders={orders} />
         </div>
       )}
       {/* refund  */}
@@ -187,15 +191,7 @@ const ProfileContnet = ({ active, setActive }) => {
   );
 };
 
-const AllOrders = () => {
-  const orders = [
-    {
-      _id: "7463hv658965dfdfgdf332",
-      orderItems: [{ name: "Iphone 14 pro max" }],
-      totalPrice: 120,
-      orderStatus: "Processing",
-    },
-  ];
+const AllOrders = ({orders}) => {
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -254,9 +250,9 @@ const AllOrders = () => {
     orders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length,
         total: "US$ " + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
 

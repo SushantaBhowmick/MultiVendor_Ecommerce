@@ -57,3 +57,22 @@ exports.getAllOrders = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler(error.message, 400));
   }
 });
+
+
+//get all order of Seller
+exports.getAllOrdersOfSeller = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const shopOrders = await Order.find({"cart.shopId":req.params.shopId}).sort({
+      createdAt:-1
+    })
+
+    res.status(200).json({
+      success: true,
+      shopOrders,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
+

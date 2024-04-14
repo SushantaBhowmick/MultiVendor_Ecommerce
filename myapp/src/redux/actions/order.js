@@ -30,3 +30,32 @@ export const getAllOrders = (userId) => async (dispatch) => {
     }
   };
   
+
+export const getAllOrdersSeller = (shopId) => async (dispatch) => {
+    try {
+      dispatch({ type: "getAllOrdersSellerRequest" });
+  
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+  
+      const {data} = await axios.get(
+        `${server}/order/get-seller-all-orders/${shopId}`,
+        {withCredentials:true},
+        config
+      );
+  
+      dispatch({
+        type: "getAllOrdersSellerSuccess",
+        payload: data.shopOrders,
+      });
+    } catch (error) {
+      dispatch({
+        type: "getAllOrdersSellerFail",
+        payload: error.response.data.message,
+      });
+    }
+  };
+  

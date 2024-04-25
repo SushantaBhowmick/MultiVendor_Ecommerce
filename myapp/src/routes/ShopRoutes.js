@@ -8,6 +8,7 @@ import ShopAllCoupouns from '../pages/Shop/ShopAllCoupouns.jsx'
 import ShopPreviewPage from '../pages/Shop/ShopPreviewPage.jsx'
 import ShopAllOrdres from '../pages/Shop/ShopAllOrdres.jsx'
 import ShopOrderDetails from '../pages/Shop/ShopOrderDetails.jsx'
+import ShopAllRefunds from '../pages/Shop/ShopAllRefunds.jsx'
 
 
 export{
@@ -20,5 +21,6 @@ export{
     ShopAllCoupouns,
     ShopPreviewPage,
     ShopAllOrdres,
-    ShopOrderDetails
+    ShopOrderDetails,
+    ShopAllRefunds
 }

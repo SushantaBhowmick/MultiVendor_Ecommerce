@@ -4,20 +4,50 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllOrders } from "../../redux/actions/order";
 import styles from "../../style/styles";
 import { BsFillBagFill } from "react-icons/bs";
-import { backend_url } from "../../server";
+import { backend_url, server } from "../../server";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const UserOrderDetails = () => {
   const { user } = useSelector((state) => state.user);
   const { orders } = useSelector((state) => state.orders);
   const { id } = useParams();
-  const dispatch = useDispatch();
-  const data = orders && orders.find((item) => item._id === id);
   const [comment, setComment] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [rating, setRating] = useState(1);
   const [open, setOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const data = orders && orders.find((item) => item._id === id);
+
+  const reviewHandler = async () => {
+    await axios.put(
+      `${server}/product/create-new-review`,
+      {user,rating,comment,productId:selectedItem?._id,orderId: id},
+      { withCredentials: true }
+    ).then((res)=>{
+      toast.success(res.data.message);
+      dispatch(getAllOrders(user._id));
+      setComment("");
+        setRating(null);
+        setOpen(false);
+    }).catch((err)=>{
+      toast.error(err.response.data.message)
+    })
+  };
+
+  const refundHandler = async () => {
+    await axios.put(`${server}/order/order-refund/${id}`,{
+      status: "Processing refund"
+    }).then((res) => {
+       toast.success(res.data.message);
+    dispatch(getAllOrders(user._id));
+    }).catch((error) => {
+      toast.error(error.response.data.message);
+    })
+  };
 
   useEffect(() => {
     dispatch(getAllOrders(user._id));
@@ -148,7 +178,7 @@ const UserOrderDetails = () => {
             </div>
             <div
               className={`${styles.button} text-white text-[20px] ml-3`}
-              // onClick={rating > 1 ? reviewHandler : null}
+              onClick={rating > 1 ? reviewHandler : null}
             >
               Submit
             </div>
@@ -156,8 +186,7 @@ const UserOrderDetails = () => {
         </div>
       )}
 
-
-<div className="border-t w-full text-right">
+      <div className="border-t w-full text-right">
         <h5 className="pt-3 text-[18px]">
           Total Price: <strong>US${data?.totalPrice}</strong>
         </h5>
@@ -184,13 +213,14 @@ const UserOrderDetails = () => {
             {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
           </h4>
           <br />
-           {
-            data?.status === "Delivered" && (
-              <div className={`${styles.button} text-white`}
-              // onClick={refundHandler}
-              >Give a Refund</div>
-            )
-           }
+          {data?.status === "Delivered" && (
+            <div
+              className={`${styles.button} text-white`}
+              onClick={refundHandler}
+            >
+              Give a Refund
+            </div>
+          )}
         </div>
       </div>
       <br />
@@ -199,7 +229,6 @@ const UserOrderDetails = () => {
       </Link>
       <br />
       <br />
-
     </div>
   );
 };

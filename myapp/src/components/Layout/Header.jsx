@@ -21,6 +21,7 @@ import { RxCross1 } from "react-icons/rx";
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { allProducts } = useSelector((state) => state.product);
+  const { isSeller } = useSelector((state) => state.seller);
   const {cart} = useSelector(state=>state.cart)
   const { wishlist } = useSelector((state) => state.wishlist);
 
@@ -102,7 +103,10 @@ const Header = ({ activeHeading }) => {
           <div className={`${styles.button}`}>
             <Link to={"/shop-create"}>
               <h1 className="text-[#fff] flex items-center">
-                Become Seller <IoIosArrowForward />
+              {
+                      isSeller ? "Seller Dashboard" : "Become Seller"
+                    }
+                   <IoIosArrowForward />
               </h1>
             </Link>
           </div>
@@ -291,9 +295,12 @@ const Header = ({ activeHeading }) => {
               <Navbar active={activeHeading} />
 
               <div className={`${styles.button} ml-5 !rounded-[4px]`}>
-                <Link to={"/shop-create"}>
+                <Link to={"/shop-login"}>
                   <h1 className="text-[#fff] flex items-center">
-                    Become Seller <IoIosArrowForward />
+                    {
+                      isSeller ? "Seller Dashboard" : "Become Seller"
+                    }
+                   <IoIosArrowForward />
                   </h1>
                 </Link>
               </div>

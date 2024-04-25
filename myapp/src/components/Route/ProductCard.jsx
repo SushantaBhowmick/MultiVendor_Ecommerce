@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addTowishlist, removeFromWishlist } from "../../redux/actions/wishlist.js";
 import { toast } from "react-toastify";
 import { addTocart } from "../../redux/actions/cart.js";
+import Ratings from "../Products/Ratings.jsx";
 
 const ProductCard = ({ data }) => {
   const [click, setClick] = useState(false);
@@ -82,15 +83,7 @@ const ProductCard = ({ data }) => {
             {data.name.length > 40 ? data.name.slice(0, 40) + "..." : data.name}
           </h4>
           <div className="flex">
-            <AiFillStar size={22} className="cursor-pointer " color="#F6BA00" />
-            <AiFillStar size={22} className="cursor-pointer " color="#F6BA00" />
-            <AiFillStar size={22} className="cursor-pointer " color="#F6BA00" />
-            <AiFillStar size={22} className="cursor-pointer" color="#F6BA00" />
-            <AiOutlineStar
-              size={22}
-              className="cursor-pointer"
-              color="#F6BA00"
-            />
+           <Ratings rating={data.ratings} />
           </div>
           <div className="py-2 flex items-center justify-between">
             <div className="flex">
@@ -102,7 +95,7 @@ const ProductCard = ({ data }) => {
               </h4>
             </div>
             <span className="font-[400] text-[17px] text-[#68d284]">
-              {data.stock}sold
+              {data?.sold_out}sold
             </span>
           </div>
           </Link>

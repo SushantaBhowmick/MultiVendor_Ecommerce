@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import styles from "../../style/styles";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@material-ui/data-grid";
-import { MdOutlineTrackChanges } from "react-icons/md";
+import { MdOutlineTrackChanges, MdTrackChanges } from "react-icons/md";
 import {
   deleteUserAddress,
   updateUserAddress,
@@ -270,14 +270,17 @@ const AllOrders = ({orders}) => {
 };
 
 const AllRefunds = () => {
-  const orders = [
-    {
-      _id: "7463hv658965dfdfgdf332",
-      orderItems: [{ name: "Iphone 14 pro max" }],
-      totalPrice: 120,
-      orderStatus: "Processing",
-    },
-  ];
+
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.orders);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrders(user._id));
+  }, []);
+
+  const eligibleOrders =
+  orders && orders.filter((item) => item.status === "Processing refund" || item.status === "Refund Success");
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -330,14 +333,16 @@ const AllRefunds = () => {
     },
   ];
 
+
   const row = [];
-  orders &&
-    orders.forEach((item) => {
+
+  eligibleOrders &&
+    eligibleOrders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length,
         total: "US$ " + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
 
@@ -355,14 +360,14 @@ const AllRefunds = () => {
 };
 
 const TrackOrder = () => {
-  const orders = [
-    {
-      _id: "7463hv658965dfdfgdf332",
-      orderItems: [{ name: "Iphone 14 pro max" }],
-      totalPrice: 120,
-      orderStatus: "Processing",
-    },
-  ];
+
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.orders);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrders(user._id));
+  }, []);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -397,16 +402,16 @@ const TrackOrder = () => {
     {
       field: " ",
       flex: 1,
-      minWidth: 130,
+      minWidth: 150,
       headerName: "",
       type: "number",
       sortable: false,
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/order/${params.id}`}>
+            <Link to={`/user/track/order/${params.id}`}>
               <Button>
-                <MdOutlineTrackChanges size={20} title="Track order" />
+                <MdTrackChanges size={20} />
               </Button>
             </Link>
           </>
@@ -416,13 +421,14 @@ const TrackOrder = () => {
   ];
 
   const row = [];
+
   orders &&
     orders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length,
         total: "US$ " + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
 

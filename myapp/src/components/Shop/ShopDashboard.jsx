@@ -14,18 +14,28 @@ const ShopDashboard = () => {
   const { shopOrders } = useSelector((state) => state.orders);
   const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.product);
+  const [deliveredOrder, setDeliveredOrder] = useState(null);
 
   useEffect(() => {
     dispatch(getAllOrdersSeller(seller._id));
     dispatch(getAllProductsShop(seller._id));
-  }, [dispatch]);
+    const orderData =
+      shopOrders && shopOrders.filter((item) => item.status === "Delivered");
+    setDeliveredOrder(orderData);
+  }, [dispatch, seller._id]);
 
-  const availableBalance = seller?.availableBalance.toFixed(2);
+  const totalEarningsWithoutTax =
+    deliveredOrder &&
+    deliveredOrder.reduce((acc,item) => acc + item.totalPrice, 0);
+  const serviceCharge = totalEarningsWithoutTax * 0.1;
+
+  // const availableBalance = seller?.availableBalance.toFixed(2);
+  const availableBalance = (totalEarningsWithoutTax - serviceCharge).toFixed(2);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
-    {
+    { 
       field: "status",
       headerName: "Status",
       minWidth: 130,
@@ -76,7 +86,7 @@ const ShopDashboard = () => {
   const row = [];
 
   shopOrders &&
-  shopOrders.forEach((item) => {
+    shopOrders.forEach((item) => {
       row.push({
         id: item._id,
         itemsQty: item.cart.reduce((acc, item) => acc + item.qty, 0),

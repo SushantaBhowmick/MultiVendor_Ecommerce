@@ -189,3 +189,57 @@ exports.getShopInfo = catchAsyncErrors(async (req, res, next) => {
       return next(new ErrorHandler(error.message, 500))
   }
 })
+
+//update seller avatar
+exports.updateShopAvatar = catchAsyncErrors(async (req, res, next) => {
+  try {
+    let existsUser = await Shop.findById(req.seller.id);
+    const existAvatarPath = `uploads/${existsUser.avatar}`
+
+    // fs.unlinkSync(existAvatarPath)
+
+    const fileUrl = path.join(req.file.filename)
+
+    const seller = await Shop.findByIdAndUpdate(req.seller.id,{
+      avatar:fileUrl
+    })
+
+
+    res.status(200).json({
+      success:true,
+      message:"Shop avatar updated successfully!",
+      seller
+    })
+  } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler(error.message, 500))
+  }
+})
+
+//update seller info
+exports.updateShopInfo = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const { name, description, address, phoneNumber, zipCode } = req.body;
+
+    const seller = await Shop.findById(req.seller.id)
+    if(!seller){
+      return next(new ErrorHandler("Shop not found",400));
+    }
+
+    seller.name = name;
+    seller.description = description;
+    seller.address = address;
+    seller.phoneNumber = phoneNumber;
+    seller.zipCode = zipCode;
+    await seller.save();
+
+    res.status(200).json({
+      success:true,
+      message:"Shop updated successfully!",
+      seller
+    })
+  } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler(error.message, 500))
+  }
+})

@@ -4,11 +4,9 @@ import ProductDetailsCard from './ProductDetailsCard.jsx'
 import styles from "../../style/styles";
 import {
   AiFillHeart,
-  AiFillStar,
   AiOutlineEye,
   AiOutlineHeart,
   AiOutlineShoppingCart,
-  AiOutlineStar,
 } from "react-icons/ai";
 import { backend_url } from "../../server.js";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +15,7 @@ import { toast } from "react-toastify";
 import { addTocart } from "../../redux/actions/cart.js";
 import Ratings from "../Products/Ratings.jsx";
 
-const ProductCard = ({ data }) => {
+const ProductCard = ({ data ,isShop,isEvent}) => {
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
   const {wishlist} = useSelector(state=>state.wishlist)
@@ -68,7 +66,7 @@ const ProductCard = ({ data }) => {
     <>
       <div className="w-full h-[370px] bg-white rounded-lg shaddow-sm p-3 relative cursor-pointer">
         <div className="flex justify-end"></div>
-        <Link to={`/product/${data._id}`}>
+        <Link to={isEvent===true?`/product/${data._id}?isEvent=true`:`/product/${data._id}`}>
           <img
             src={`${backend_url}${data.images && data.images[0]}`}
             alt="product"
@@ -78,7 +76,7 @@ const ProductCard = ({ data }) => {
         <Link  to={`/shop/preview/${data.shop._id}`} >
           <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>
         </Link>
-        <Link to={`/product/${data._id}`}>
+        <Link to={isEvent===true?`/product/${data._id}?isEvent=true`:`/product/${data._id}`}>
           <h4 className="pb-3 font-[500]">
             {data.name.length > 40 ? data.name.slice(0, 40) + "..." : data.name}
           </h4>

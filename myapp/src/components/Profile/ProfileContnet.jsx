@@ -13,6 +13,7 @@ import { DataGrid } from "@material-ui/data-grid";
 import { MdOutlineTrackChanges, MdTrackChanges } from "react-icons/md";
 import {
   deleteUserAddress,
+  loadUser,
   updateUserAddress,
   updateUserInfo,
 } from "../../redux/actions/user";
@@ -53,7 +54,8 @@ const ProfileContnet = ({ active, setActive }) => {
       })
       .then((res) => {
         toast.success(res.data.message);
-        window.location.reload();
+        dispatch(loadUser())
+        toast.success(res.data.message)
       })
       .catch((err) => {
         toast.error(err);

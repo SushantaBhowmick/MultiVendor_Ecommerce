@@ -9,6 +9,7 @@ import { getAllProductsShop } from "../../redux/actions/product";
 
 const ShopInfo = ({ isOwner }) => {
   const { seller } = useSelector((state) => state.seller);
+  const { products } = useSelector((state) => state.product);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
   const { id } = useParams();
@@ -44,6 +45,13 @@ const ShopInfo = ({ isOwner }) => {
       });
   };
 
+  const totalReviewsLength =
+    products &&
+    products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+  const totalRatings = products && products.reduce((acc,product) => acc + product.reviews.reduce((sum,review) => sum + review.rating, 0),0);
+
+  const averageRating = totalRatings / totalReviewsLength || 0;
   return (
     <div>
       <div className="w-full py-5">
@@ -69,11 +77,11 @@ const ShopInfo = ({ isOwner }) => {
       </div>
       <div className="p-3">
         <h5 className="font-[600]">Total Products</h5>
-        <h5 className=" text-[#000000a6]">{}</h5>
+        <h5 className=" text-[#000000a6]">{products && products.length}</h5>
       </div>
       <div className="p-3">
         <h5 className="font-[600]">Shop Ratings</h5>
-        <h5 className=" text-[#000000a6]">4/5</h5>
+        <h5 className=" text-[#000000a6]">{averageRating}/5</h5>
       </div>
       <div className="p-3">
         <h5 className="font-[600]">Joined On</h5>
